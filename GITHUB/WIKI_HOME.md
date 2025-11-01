@@ -7,30 +7,23 @@ Welcome to the **Weather Upgrade** mod documentation! This wiki contains everyth
 ## 📚 Quick Navigation
 
 ### Getting Started
-- **[Installation Guide](#installation)** - How to install the mod on your server
-- **[Quick Start Examples](#quick-start)** - Common configurations to get started fast
+- **[Installation Guide](INSTALLATION.md)** - How to install the mod on your server
+- **[Quick Start Examples](README.md#configuration)** - Common configurations to get started fast
 
 ### Configuration
-- **[Master Settings (WU_Settings.json)](#master-settings)** - Main configuration file
-- **[Auto Weather Mode](#auto-weather-mode)** - Random weather changes
-- **[Manual Weather Mode](#manual-weather-mode)** - Scheduled weather by time
-- **[Temperature Zones](#temperature-zones)** - Location-based temperature control
+- **[Master Settings (WU_Settings.json)](SETTINGS_REFERENCE.md#master-settings)** - Main configuration file
+- **[Auto Weather Mode](SETTINGS_REFERENCE.md#auto-weather-settings)** - Random weather changes
+- **[Manual Weather Mode](SETTINGS_REFERENCE.md#manual-weather-settings)** - Scheduled weather by time
+- **[Temperature Zones](SETTINGS_REFERENCE.md#zone-temperature-settings)** - Location-based temperature control
 
 ### Reference
-- **[All Weather Parameters](#weather-parameters)** - Complete list of preset options
-- **[Wind Settings](#wind-settings)** - Wind speed, direction, and function parameters
-- **[Rain & Snow Thresholds](#thresholds)** - Control when precipitation appears
-- **[Volumetric Fog](#volumetric-fog)** - Realistic 3D fog configuration
-- **[Temperature Control](#temperature-control)** - Global and zone-based temperatures
-
-### Advanced
-- **[Drift Correction System](#drift-correction)** - How the mod maintains your settings
-- **[Logging System](#logging)** - Normal and debug logging explained
-- **[COT Compatibility](#cot-compatibility)** - Using with Community Online Tools
+- **[All Weather Parameters](SETTINGS_REFERENCE.md#weather-preset-parameters)** - Complete list of preset options
+- **[Quick Reference Table](SETTINGS_QUICK_REFERENCE.md)** - Fast lookup for all settings
+- **[Changelog](CHANGELOG.md)** - Version history and updates
 
 ### Help
-- **[Troubleshooting](#troubleshooting)** - Common issues and solutions
-- **[FAQ](#faq)** - Frequently asked questions
+- **[Full Documentation](README.md)** - Main documentation page
+- **[Settings Reference](SETTINGS_REFERENCE.md)** - Complete settings guide
 
 ---
 
@@ -53,73 +46,68 @@ This wiki is organized into the following sections:
 
 ### Configuration Files
 
-1. **[WU_Settings.json](WU-Settings)** - Master configuration
+1. **[WU_Settings.json](SETTINGS_REFERENCE.md#master-settings)** - Master configuration
    - Weather mode selection (Auto vs Manual)
    - Temperature control toggles
    - Drift correction settings
    - Logging configuration
 
-2. **[WU_AutoWeather.json](WU-AutoWeather)** - Auto/Random mode
+2. **[WU_AutoWeather.json](SETTINGS_REFERENCE.md#auto-weather-settings)** - Auto/Random mode
    - Random weather change intervals
    - Random weather chance percentage
    - Weather presets with min/max ranges
 
-3. **[WU_ManualWeather.json](WU-ManualWeather)** - Manual/Schedule mode
+3. **[WU_ManualWeather.json](SETTINGS_REFERENCE.md#manual-weather-settings)** - Manual/Schedule mode
    - Time-based weather schedule
    - Weather presets with min/max ranges
    - Chance-based schedule entries
 
-4. **[WU_ZoneTemperatureControl.json](WU-ZoneTemperatureControl)** - Temperature zones
+4. **[WU_ZoneTemperatureControl.json](SETTINGS_REFERENCE.md#zone-temperature-settings)** - Temperature zones
    - Location-based temperature overrides
    - Radius and height configurations
    - Per-zone temperature ranges
 
 ### Parameter Reference
 
-- **[Complete Settings Reference](Complete-Settings-Reference)** - Every parameter explained
-- **[Wind Parameters](Wind-Parameters)** - Wind speed, direction, and function
-- **[Threshold Parameters](Threshold-Parameters)** - Rain and snow thresholds
-- **[Volumetric Fog Parameters](Volumetric-Fog)** - 3D fog configuration
-- **[Temperature Parameters](Temperature-Parameters)** - Global and zone temperatures
-
-### Guides
-
-- **[Creating Custom Presets](Creating-Custom-Presets)** - Step-by-step preset creation
-- **[Setting Up Temperature Zones](Setting-Up-Temperature-Zones)** - Zone configuration guide
-- **[Understanding Drift Correction](Understanding-Drift-Correction)** - How drift works
-- **[Using Debug Logging](Using-Debug-Logging)** - Troubleshooting with logs
+- **[Complete Settings Reference](SETTINGS_REFERENCE.md)** - Every parameter explained
+- **[Quick Reference Tables](SETTINGS_QUICK_REFERENCE.md)** - Fast lookup for all settings
+- **[Changelog](CHANGELOG.md)** - Version history and release notes
 
 ---
 
 ## 🆘 Need Help?
 
-1. **Check the [Troubleshooting](Troubleshooting) page** for common issues
-2. **Review the [FAQ](FAQ)** for quick answers
-3. **Enable debug logging** and check your logs
+1. **Check the [Installation Guide](INSTALLATION.md)** for setup instructions
+2. **Review the [Settings Reference](SETTINGS_REFERENCE.md)** for configuration details
+3. **Enable debug logging** in `WU_Settings.json` and check your logs
 4. **Open an issue** on GitHub with log files
 
 ---
 
 ## 📋 Latest Version
 
-**Current:** v3.1 (2025-11-01)
+**Current:** v3.2 (2025-11-02)
 
-**New in v3.1:**
+**New in v3.2:**
+- ✅ Removed `WeatherChangeInterval` (eliminated confusing double-timer)
+- ✅ Each preset now controls its own duration via `m_MinDuration_Min/Max`
+- ✅ Simplified auto weather system
+- ✅ Better predictability and flexibility
+
+**v3.1 Highlights:**
 - ✅ Wind Function parameters (fixes COT compatibility)
 - ✅ Rain Threshold controls
 - ✅ Configurable wind variation per preset
-- ✅ No more hardcoded values
 
-[See Full Changelog](Changelog)
+[See Full Changelog](CHANGELOG.md)
 
 ---
 
 ## 🔗 External Links
 
-- [GitHub Repository](https://github.com/yourusername/Weather_Upgrade)
-- [Latest Release](https://github.com/yourusername/Weather_Upgrade/releases)
-- [Report a Bug](https://github.com/yourusername/Weather_Upgrade/issues)
-- [Request a Feature](https://github.com/yourusername/Weather_Upgrade/discussions)
+- [GitHub Repository](https://github.com/FUBAR88/Weather_Upgrade)
+- [Latest Release](https://github.com/FUBAR88/Weather_Upgrade/releases)
+- [Report a Bug](https://github.com/FUBAR88/Weather_Upgrade/issues)
 
 ---
 
