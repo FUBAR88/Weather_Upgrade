@@ -1,5 +1,62 @@
 # Weather_Upgrade Mod - Changelog
 
+## Version 3.2 (2025-11-02)
+
+### Breaking Changes
+- **Removed `WeatherChangeInterval` setting** from Auto Mode
+  - Auto weather now uses per-preset `m_MinDuration_Min/Max` exclusively
+  - Eliminates confusing double-timer system
+  - Each preset now fully controls its own duration
+
+### How Auto Mode Works Now
+1. Server starts → Applies initial preset (e.g., `clear`)
+2. Preset rolls a random duration from `m_MinDuration_Min/Max` (e.g., 750 seconds)
+3. After duration expires → Rolls `RandomWeatherChance` (e.g., 30%)
+4. If roll succeeds → Selects new random preset
+5. If roll fails → Current preset continues with new random duration
+
+### Migration Guide
+- **Action Required:** Remove `"WeatherChangeInterval"` line from `WU_AutoWeather.json`
+- Or delete config and let mod regenerate defaults on next server start
+- No changes to preset definitions required
+
+### Benefits
+- **Clarity:** Single duration control per preset (no conflicting timers)
+- **Flexibility:** Different presets can have vastly different durations
+  - Example: `clear` (10-20 min) vs `rain` (5-5 min)
+- **Predictability:** Duration always respected before considering change
+- **Simplicity:** Easier to understand and configure
+
+### Example
+**Before (confusing):**
+```json
+"WeatherChangeInterval": 240,      // Check every 4 min
+"clear": {
+    "m_MinDuration_Min": 600,      // Wants 10 min
+    "m_MinDuration_Max": 900       // Conflict!
+}
+```
+
+**After (clear):**
+```json
+"RandomWeatherChance": 30,         // 30% to change
+"clear": {
+    "m_MinDuration_Min": 600,      // 10 min minimum
+    "m_MinDuration_Max": 900       // 15 min maximum
+}
+```
+
+### Technical Changes
+- Removed `m_WeatherChangeInterval` from `WU_WeatherManager`
+- Removed `m_NextChangeTime` timer logic
+- Added `m_PresetApplyTime` to track when preset was applied
+- `OnUpdate()` now checks if `elapsed >= m_MinDuration` before calling `ApplyRandomWeather()`
+- `ApplyRandomWeather()` validates MinDuration before allowing change
+- Removed `GetWeatherChangeInterval()` from `WU_ConfigManager`
+- Removed `WeatherChangeInterval` field from `WU_ConfigAuto`
+
+---
+
 ## Version 3.1 (2025-11-01)
 
 ### New Features

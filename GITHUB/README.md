@@ -61,11 +61,10 @@
 ```json
 {
     "AutoWeatherChanges": 1,
-    "WeatherChangeInterval": 1800,
     "RandomWeatherChance": 30
 }
 ```
-30% chance to change weather every 30 minutes
+Each preset defines its own duration. After duration expires, 30% chance to switch to a random preset.
 
 **Manual Mode (Scheduled):**
 ```json

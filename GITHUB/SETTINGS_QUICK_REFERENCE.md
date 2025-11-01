@@ -25,11 +25,13 @@ Fast lookup table for all Weather Upgrade settings.
 | Setting | Range | Default | What It Does |
 |---------|-------|---------|--------------|
 | `DefaultWeatherPreset` | string | "clear" | Starting preset (or `""` for random) |
-| `WeatherCheckInterval` | seconds | 60 | How often to check weather status |
-| `WeatherChangeInterval` | seconds | 1800 | How often to roll for random change |
-| `RandomWeatherChance` | 0-100% | 30 | % chance to change each interval |
+| `WeatherCheckInterval` | seconds | 60 | How often to check drift/status (not weather changes) |
+| `RandomWeatherChance` | 0-100% | 30 | % chance to change when preset duration expires |
 
-**Example:** `WeatherChangeInterval: 1800` + `RandomWeatherChance: 30` = 30% chance every 30 minutes
+**How It Works:**
+- Each preset controls its own duration via `m_MinDuration_Min/Max`
+- Example: `clear` preset (600-900s) → rolled 750s → after 750s, 30% chance to switch presets
+- `0%` = Never change (stays on preset), `100%` = Always change (deterministic rotation)
 
 ---
 

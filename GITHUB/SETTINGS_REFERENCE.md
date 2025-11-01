@@ -161,25 +161,27 @@ Used when `AutoWeatherChanges` is set to `1`. Controls random weather changes.
 ### WeatherCheckInterval
 - **Type:** Integer (seconds)
 - **Default:** 60
-- **Description:** How often the mod performs internal weather checks
+- **Description:** How often the mod performs internal drift checks and status logging
 - **Recommended Values:** 30-120 seconds
-- **Notes:** Different from WeatherChangeInterval. This is for system checks, not weather changes.
-
-### WeatherChangeInterval
-- **Type:** Integer (seconds)
-- **Default:** 1800 (30 minutes)
-- **Description:** How often the mod attempts a random weather change
-- **Recommended Values:** 900-3600 seconds (15-60 minutes)
-- **Notes:** Actual changes depend on `RandomWeatherChance`
+- **Notes:** This is for system maintenance, not for weather changes. Weather changes are driven by each preset's `m_MinDuration` setting.
 
 ### RandomWeatherChance
 - **Type:** Integer (percentage)
 - **Default:** 30
-- **Description:** Probability of weather change when interval is reached
-- **Recommended Values:** 20-50%
-- **Example:** With 30% chance and 1800s interval:
-  - Every 30 minutes, there's a 30% chance weather will randomly change
-  - On average, weather changes every 90 minutes
+- **Description:** Probability of weather change when a preset's duration expires
+- **Recommended Values:** 0-100%
+- **How It Works:**
+  1. Preset is applied with a duration from `m_MinDuration_Min/Max` (e.g., 600-900 seconds)
+  2. System randomly picks a duration (e.g., 750 seconds)
+  3. After 750 seconds, the system rolls the `RandomWeatherChance` dice
+  4. If roll succeeds (≤ 30%), a new random preset is selected
+  5. If roll fails (> 30%), the current preset continues
+- **Example:** With `RandomWeatherChance: 30`:
+  - `clear` preset (duration 600-900s) → rolled 750s → after 750s, 30% chance to switch to another preset
+  - If chance fails, the same `clear` preset continues with a new random duration
+- **Special Cases:**
+  - `0` = Never change automatically (stays on current preset forever)
+  - `100` = Always change when duration expires (deterministic rotation)
 
 ### WeatherPresets
 - **Type:** Object/Dictionary
