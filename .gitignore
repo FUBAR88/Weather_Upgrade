@@ -1,0 +1,40 @@
+# Build outputs
+target/
+*.pbo
+*.ebo
+
+# Logs
+*.log
+*.log.*
+
+# User-specific files
+Sample_MOD/
+Users/
+WinterMap/
+Weather_Upgrade_old/
+*.ps_DeerIsle
+*.ps1_Cherno
+
+# Build scripts (keep for development only)
+Build.ps1
+LaunchDayZ.ps1
+LaunchDayZServer.ps1
+StopClientAndServer.ps1
+additionalCommands/
+config/
+
+# IDE
+.vscode/
+.vs/
+*.suo
+*.user
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*~
+
+# Windows
+Thumbs.db
+Desktop.ini
