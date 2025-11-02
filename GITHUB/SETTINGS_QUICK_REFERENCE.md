@@ -240,10 +240,8 @@ Fast lookup table for all Weather Upgrade settings.
 ## 📖 Full Documentation
 
 For complete parameter explanations, see:
-- [Complete Settings Reference](../Weather_Upgrade_Info/SETTINGS_REFERENCE.md)
-- [README with Examples](../README.md)
-
----
-
-**Quick Reference** | [Installation](INSTALLATION.md) | [FAQ](FAQ.md) | [Troubleshooting](TROUBLESHOOTING.md)
+- [Complete Settings Reference](SETTINGS_REFERENCE.md)
+- [Installation Guide](INSTALLATION.md)
+- [Changelog](CHANGELOG.md)
+- [README](README.md)
 

@@ -1,6 +1,6 @@
 # Weather Upgrade for DayZ
 
-[![Version](https://img.shields.io/badge/version-3.1-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
+[![Version](https://img.shields.io/badge/version-3.2-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
 [![DayZ](https://img.shields.io/badge/DayZ-1.25+-green.svg)](https://dayz.com)
 
 > Complete server-side weather control system for DayZ with automatic/manual scheduling, temperature zones, and drift correction.
@@ -173,10 +173,14 @@ Update to v3.1+ (fixes wind function and rain threshold parameters)
 
 ## 📝 Changelog
 
-**v3.1 (2025-11-01) - Current**
+**v3.2 (2025-11-02) - Current**
+- ✅ Removed `WeatherChangeInterval` (simplified auto mode)
+- ✅ Per-preset duration control only
+- ✅ Clearer auto weather logic
+
+**v3.1 (2025-11-01)**
 - ✅ Wind Function parameters (COT compatibility fix)
 - ✅ Rain Threshold controls
-- ✅ No more hardcoded values
 
 **v3.0 (2025-10-30)**
 - ✅ Enhanced logging (INFO + DEBUG)
