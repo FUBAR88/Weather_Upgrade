@@ -49,7 +49,6 @@ This wiki is organized into the following sections:
 1. **[WU_Settings.json](SETTINGS_REFERENCE.md#master-settings)** - Master configuration
    - Weather mode selection (Auto vs Manual)
    - Temperature control toggles
-   - Drift correction settings
    - Logging configuration
 
 2. **[WU_AutoWeather.json](SETTINGS_REFERENCE.md#auto-weather-settings)** - Auto/Random mode
@@ -86,18 +85,22 @@ This wiki is organized into the following sections:
 
 ## 📋 Latest Version
 
-**Current:** v3.2 (2025-11-02)
+**Current:** v3.3.1 (2025-11-04)
 
-**New in v3.2:**
+**New in v3.3.1:**
+- ✅ Reduced log noise (96% reduction on config hot-reloads)
+- ✅ Improved manual mode display (shows next schedule time)
+- ✅ Bug fixes and code cleanup
+
+**v3.3 Highlights:**
+- ✅ Removed drift correction (performance optimization)
+- ✅ Relies on `MissionWeather` API for stability
+- ✅ 90% reduction in weather API calls
+
+**v3.2 Highlights:**
 - ✅ Removed `WeatherChangeInterval` (eliminated confusing double-timer)
 - ✅ Each preset now controls its own duration via `m_MinDuration_Min/Max`
 - ✅ Simplified auto weather system
-- ✅ Better predictability and flexibility
-
-**v3.1 Highlights:**
-- ✅ Wind Function parameters (fixes COT compatibility)
-- ✅ Rain Threshold controls
-- ✅ Configurable wind variation per preset
 
 [See Full Changelog](CHANGELOG.md)
 
