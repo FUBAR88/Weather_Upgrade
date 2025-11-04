@@ -1,9 +1,9 @@
 # Weather Upgrade for DayZ
 
-[![Version](https://img.shields.io/badge/version-3.2-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
+[![Version](https://img.shields.io/badge/version-3.3.1-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
 [![DayZ](https://img.shields.io/badge/DayZ-1.25+-green.svg)](https://dayz.com)
 
-> Complete server-side weather control system for DayZ with automatic/manual scheduling, temperature zones, and drift correction.
+> Complete server-side weather control system for DayZ with automatic/manual scheduling and temperature zones. Performance-optimized with MissionWeather API.
 
 ---
 
@@ -26,8 +26,9 @@
   - Snowflake size customization
 
 - 📊 **Logging System**
-  - Production logs
-  - Debug logs for troubleshooting
+  - Production logs (minimal noise, essential info only)
+  - Debug logs for troubleshooting (when enabled)
+  - Reduced log spam on config hot-reloads
   - Player temperature tracking
 
 - 🔧 **Admin Friendly**
@@ -159,10 +160,10 @@ Rain at 14:00 every day
 2. Verify correct config file is configured
 3. Check logs in `profiles/Weather_Upgrade/Logs/`
 
-### Weather Drifts
-1. Enable debug logging
-2. Check drift correction settings
-3. Verify no conflicting mods
+### Weather Not Stable
+1. Verify no conflicting weather mods
+2. Check logs for errors
+3. Ensure `MissionWeather` is active (check startup logs)
 
 ### COT Shows Wrong Values
 Update to v3.1+ (fixes wind function and rain threshold parameters)
@@ -173,10 +174,19 @@ Update to v3.1+ (fixes wind function and rain threshold parameters)
 
 ## 📝 Changelog
 
-**v3.2 (2025-11-02) - Current**
+**v3.3.1 (2025-11-04) - Current**
+- ✅ Reduced log noise (96% reduction on hot-reloads)
+- ✅ Improved manual mode display (shows next schedule time)
+- ✅ Bug fixes and code cleanup
+
+**v3.3 (2025-11-03)**
+- ✅ Removed drift correction (performance optimization)
+- ✅ Relies on `MissionWeather` API for stability
+- ✅ 90% reduction in weather API calls
+
+**v3.2 (2025-11-02)**
 - ✅ Removed `WeatherChangeInterval` (simplified auto mode)
 - ✅ Per-preset duration control only
-- ✅ Clearer auto weather logic
 
 **v3.1 (2025-11-01)**
 - ✅ Wind Function parameters (COT compatibility fix)

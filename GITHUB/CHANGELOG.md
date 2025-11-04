@@ -1,5 +1,78 @@
 # Weather_Upgrade Mod - Changelog
 
+## Version 3.3.1 (2025-11-04)
+
+### Improvements
+- **Reduced Log Noise**
+  - Hot-reload operations now use minimal DEBUG-level logging (1-2 lines instead of 26+)
+  - Initial config load still shows full verbose logging for clarity
+  - 96% reduction in log spam during runtime config reloads
+  - Hot-reload messages moved to DEBUG level (only visible with `EnableDebugLogging: 1`)
+
+- **Manual Mode Display Enhancement**
+  - Status logs now show "Next schedule at XX:XX" instead of misleading duration countdown
+  - Removed confusing negative duration values in manual/scheduled mode
+  - Auto mode still shows duration countdown as before
+  - More intuitive display for time-based weather scheduling
+
+### Bug Fixes
+- Fixed duplicate variable declaration error in weather status logging
+- Fixed compilation error caused by `wu_elapsed` being declared multiple times
+
+### Technical Changes
+- Added `verboseLogging` parameter to config loading methods
+- Added `GetNextScheduleTimeString()` helper function for manual mode
+- Improved log output clarity between initial load and hot-reload operations
+
+### Migration Guide
+- **No action required** - fully backward compatible
+- Existing configs work without changes
+- Log improvements are automatic
+
+---
+
+## Version 3.3 (2025-11-03)
+
+### Breaking Changes
+- **Removed drift correction system** for performance optimization
+  - Eliminates 90% of weather API calls during steady-state operation
+  - Relies on `MissionWeather(true)` to prevent DayZ's native weather from overriding values
+  - No more periodic drift checks or corrections
+
+### Why This Change?
+**User Feedback:** Players reported performance issues from constant weather corrections
+
+**Technical Analysis:**
+- DayZ's `WeatherPhenomenon.OnBeforeChange()` respects `MissionWeather(true)` flag
+- When set, native weather system doesn't compute new forecasts
+- Our drift correction was fighting a battle we'd already won
+- Constant `.GetActual()` calls and `.Set()` corrections were unnecessary overhead
+
+### How It Works Now
+1. Mod calls `weather.MissionWeather(true)` on startup
+2. DayZ's native weather system is blocked from making changes
+3. Weather values stay locked to your preset configuration
+4. No periodic checks or corrections needed
+
+### Migration Guide
+- **Action Required:** Remove these lines from `WU_Settings.json`:
+  - `"DriftCorrectionTime"`
+  - `"DriftCorrectionCooldown"`
+  - `"DriftTolerance"`
+- Or delete config and let mod regenerate defaults on next server start
+
+### Performance Impact
+- **Before:** 9 weather API calls every 60 seconds + corrections
+- **After:** 0 API calls during steady state
+- **Result:** Smoother server performance, especially with many players
+
+### Compatibility
+- No changes to preset definitions
+- No changes to auto/manual weather modes
+- Existing configs work (extra fields ignored)
+
+---
+
 ## Version 3.2 (2025-11-02)
 
 ### Breaking Changes
@@ -73,16 +146,13 @@
   - Now properly calls `weather.SetRainThresholds()` API
 
 ### Bug Fixes
-- Fixed wind speed drift caused by hardcoded wind function parameters
 - Fixed COT weather monitor showing incorrect wind values (0.1/1.0/20.0)
 - Fixed missing `SetRainThresholds()` API call in weather application
-- Fixed drift correction not applying wind function parameters
 
 ### Technical Changes
 - Updated `WU_WeatherPreset` class with 6 new fields
 - Updated `WU_WeatherConfig` class with 6 new fields
 - Modified `ApplyWeatherConfig()` to use preset-specific wind function params
-- Modified `ForceWeatherCorrection()` to maintain wind function params during drift correction
 - Updated all default preset generation in `WU_ConfigAuto.c` and `WU_ConfigManual.c`
 
 ### Compatibility
@@ -113,17 +183,14 @@
   - Active player tracking with entry/exit logging
   - `WU_PlayerZonePlugin` for continuous zone monitoring (works even if `Environment` override blocked)
 
-- **Configurable Drift Correction**
-  - `DriftCorrectionTime` (default: 60s): Transition time for corrections
-  - `DriftCorrectionCooldown` (default: 30s): Minimum time between corrections
-  - `DriftTolerance` (default: 0.1): Threshold for triggering correction
-  - Replaced hardcoded values with user-configurable settings
+- **Configurable Weather Monitoring**
+  - Status logging every 60 seconds
+  - Real-time weather value tracking
 
 ### Improvements
 - Added diagnostic log confirming `Environment.GetEnvironmentTemperature()` override is active
 - Zone loading logs display "Height=disabled" when `Height <= 0`
 - Improved temperature zone compatibility with map mods (e.g., DeerIsle)
-- Enhanced drift correction now applies volumetric fog values even when 0 (ensures proper cleanup)
 - Added global temperature variables to `WU_TemperatureGlobals.c` for proper load order
 
 ### Bug Fixes
@@ -172,7 +239,6 @@
 ### Bug Fixes
 - Fixed time formatting to use leading zeros for consistency with JSON format
 - Fixed startup time display showing real-world time instead of game time
-- Improved weather drift correction logging
 
 ### Technical Changes
 - Added `FormatGameTime()` helper function for consistent time formatting
@@ -200,7 +266,6 @@
 - Manual weather scheduling by game time
 - Auto weather with random changes
 - 9 default weather presets
-- Weather drift correction system
 - Smooth transitions between presets
 - Thunderstorm and lightning control
 - Wind direction and speed management
