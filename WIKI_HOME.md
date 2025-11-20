@@ -36,7 +36,7 @@ Weather Upgrade is a comprehensive server-side mod that gives you complete contr
 - **Override temperatures** globally or in specific map locations
 - **Control all weather parameters** including fog, wind, snow, rain, storms
 - **Monitor weather** via COT's in-game weather panel
-- **Prevent drift** - automatically corrects when DayZ tries to override your settings
+- **Complete server-side control** - uses MissionWeather API for precise weather control
 
 ---
 
@@ -85,9 +85,24 @@ This wiki is organized into the following sections:
 
 ## 📋 Latest Version
 
-**Current:** v3.3.1 (2025-11-04)
+**Current:** v2.3.4
 
-**New in v3.3.1:**
+**New in v2.3.4:**
+- ✅ Manual weather control with 1-second reinforcement system
+- ✅ Smooth transitions with manual value calculation
+- ✅ Aggressive 0.5-second snowfall reinforcement
+
+**v3.3.3 (2025-11-13):**
+- ✅ Centralized `WeatherCheckInterval` to `WU_Settings.json` (single setting for both modes)
+- ✅ Simplified configuration (removed duplicate setting from auto/manual configs)
+- ✅ Better default (30s instead of 60s for more responsive monitoring)
+
+**v3.3.2:**
+- ✅ Fixed timer reset issue (presets now change correctly after duration)
+- ✅ Fixed excessive logging spam (rain thresholds, temperature)
+- ✅ Fixed rain sounds playing when rain is disabled (winter maps)
+
+**v3.3.1:**
 - ✅ Reduced log noise (96% reduction on config hot-reloads)
 - ✅ Improved manual mode display (shows next schedule time)
 - ✅ Bug fixes and code cleanup

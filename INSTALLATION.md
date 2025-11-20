@@ -16,8 +16,8 @@ Complete installation instructions for Weather Upgrade mod.
 
 ### Step 1: Download the Mod
 
-1. Go to [Releases](https://github.com/yourusername/Weather_Upgrade/releases)
-2. Download the latest `Weather_Upgrade_v3.1.zip`
+1. Go to [Releases](https://github.com/FUBAR88/Weather_Upgrade/releases)
+2. Download the latest `Weather_Upgrade_v2.3.4.zip`
 3. Extract the archive
 
 ### Step 2: Install on Server
@@ -80,25 +80,6 @@ Look for these lines:
 [INFO] [WEATHER MANAGER] Configuration loaded successfully
 [INFO] [WEATHER MANAGER] Weather Upgrade mod initialized successfully
 ```
-
----
-
-## 🖥️ Client Installation (Optional)
-
-For enhanced temperature zone functionality:
-
-1. **Copy** `@Weather_Upgrade` to client's DayZ folder:
-   ```
-   C:\Program Files (x86)\Steam\steamapps\common\DayZ\
-   └── @Weather_Upgrade/
-   ```
-
-2. **Add** to DayZ launcher or start parameters:
-   ```bat
-   -mod=@Weather_Upgrade
-   ```
-
-> ⚠️ **Note:** Client installation is optional. The mod works fully server-side, but client-side enhances temperature zone features.
 
 ---
 

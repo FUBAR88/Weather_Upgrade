@@ -74,31 +74,17 @@ These are the core settings that control the overall behavior of the Weather Upg
   - `0` = Zone temperature control disabled (production default)
 - **Notes:** Allows different temperatures in specific map locations (e.g., cold mountains, warm bunkers). Requires configuration in `WU_ZoneTemperatureControl.json`
 
-### DriftCorrectionTime
-- **Type:** Float (seconds)
-- **Default:** 60.0
-- **Description:** How long the weather transition takes when correcting drift
+### WeatherCheckInterval
+- **Type:** Integer (seconds)
+- **Default:** 30
+- **Description:** How often the mod checks weather status and logs status updates
 - **Recommended Values:** 30-120 seconds
-- **Notes:** DayZ's weather system sometimes "drifts" from the values you set. This controls how smoothly the mod corrects back to your desired values.
-- **Example:** If overcast drifts from 0.8 to 0.75, it will take 60 seconds to smoothly transition back to 0.8
-
-### DriftCorrectionCooldown
-- **Type:** Float (seconds)
-- **Default:** 30.0
-- **Description:** Minimum time between drift corrections
-- **Recommended Values:** 20-60 seconds
-- **Notes:** Prevents the mod from constantly adjusting weather. After a correction, the mod waits this long before checking for drift again.
-- **Example:** If drift is detected at 12:00:00, the next correction cannot happen until 12:00:30
-
-### DriftTolerance
-- **Type:** Float (0.0 to 1.0)
-- **Default:** 0.1
-- **Description:** How much weather can drift before correction is triggered
-- **Recommended Values:** 0.05-0.15
 - **Notes:** 
-  - Lower values = more frequent corrections (tighter control)
-  - Higher values = fewer corrections (more lenient)
-- **Example:** With tolerance of 0.1, overcast can drift from 0.8 to 0.7 (or 0.9) before correction triggers
+  - Controls template logging frequency (weather status reports)
+  - Controls schedule check frequency in manual mode
+  - Lower values = more frequent checks/logs (better monitoring, slightly higher CPU usage)
+  - Higher values = less frequent checks/logs (less monitoring, lower CPU usage)
+  - Applies to both Auto and Manual modes (single setting for both)
 
 ---
 
@@ -113,13 +99,6 @@ Used when `AutoWeatherChanges` is set to `0`. Controls time-based weather schedu
 - **Default:** "clear"
 - **Description:** Fallback preset if schedule lookup fails
 - **Notes:** Should match one of your defined preset names
-
-### WeatherCheckInterval
-- **Type:** Integer (seconds)
-- **Default:** 60
-- **Description:** How often the mod checks if it's time to change weather based on schedule
-- **Recommended Values:** 30-120 seconds
-- **Notes:** Lower values = more responsive to schedule changes, but slightly higher CPU usage
 
 ### WeatherPresets
 - **Type:** Object/Dictionary
@@ -157,13 +136,6 @@ Used when `AutoWeatherChanges` is set to `1`. Controls random weather changes.
 - **Default:** "clear"
 - **Description:** Initial weather preset when server starts
 - **Notes:** Should match one of your defined preset names
-
-### WeatherCheckInterval
-- **Type:** Integer (seconds)
-- **Default:** 60
-- **Description:** How often the mod performs internal drift checks and status logging
-- **Recommended Values:** 30-120 seconds
-- **Notes:** This is for system maintenance, not for weather changes. Weather changes are driven by each preset's `m_MinDuration` setting.
 
 ### RandomWeatherChance
 - **Type:** Integer (percentage)
@@ -511,9 +483,7 @@ Creates location-based temperature zones (disabled by default).
     "AutoWeatherChanges": 0,
     "EnableTemperatureControl": 1,
     "EnableZoneTemperatureControl": 0,
-    "DriftCorrectionTime": 60,
-    "DriftCorrectionCooldown": 30,
-    "DriftTolerance": 0.1
+    "WeatherCheckInterval": 30,
 }
 ```
 
@@ -523,7 +493,7 @@ Creates location-based temperature zones (disabled by default).
     "EnableLogging": 1,
     "EnableDebugLogging": 1,
     "KeepLogsDays": 7,
-    "DriftTolerance": 0.05
+    "WeatherCheckInterval": 10
 }
 ```
 

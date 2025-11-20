@@ -1,6 +1,6 @@
 # Weather Upgrade for DayZ
 
-[![Version](https://img.shields.io/badge/version-3.3.1-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
+[![Version](https://img.shields.io/badge/version-2.3.4-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
 [![DayZ](https://img.shields.io/badge/DayZ-1.25+-green.svg)](https://dayz.com)
 
 > Complete server-side weather control system for DayZ with automatic/manual scheduling and temperature zones. Performance-optimized with MissionWeather API.
@@ -174,7 +174,23 @@ Update to v3.1+ (fixes wind function and rain threshold parameters)
 
 ## 📝 Changelog
 
-**v3.3.1 (2025-11-04) - Current**
+**v2.3.4 (Current) - Latest**
+- ✅ Manual weather control with 1-second reinforcement system
+- ✅ Smooth transitions with manual value calculation
+- ✅ Aggressive 0.5-second snowfall reinforcement
+- ✅ Complete server-side weather control
+
+**v3.3.3 (2025-11-13)**
+- ✅ Centralized `WeatherCheckInterval` to `WU_Settings.json` (single setting for both modes)
+- ✅ Simplified configuration (removed duplicate setting from auto/manual configs)
+- ✅ Better default (30s instead of 60s for more responsive monitoring)
+
+**v3.3.2 (2025-11-12)**
+- ✅ Fixed timer reset issue (presets now change correctly after duration)
+- ✅ Fixed excessive logging spam (rain thresholds, temperature)
+- ✅ Fixed rain sounds playing when rain is disabled (winter maps)
+
+**v3.3.1 (2025-11-04)**
 - ✅ Reduced log noise (96% reduction on hot-reloads)
 - ✅ Improved manual mode display (shows next schedule time)
 - ✅ Bug fixes and code cleanup
@@ -195,7 +211,7 @@ Update to v3.1+ (fixes wind function and rain threshold parameters)
 **v3.0 (2025-10-30)**
 - ✅ Enhanced logging (INFO + DEBUG)
 - ✅ Temperature zone system
-- ✅ Configurable drift correction
+- ✅ Manual weather control system
 
 **v2.0 (2025-10-24)**
 - ✅ Volumetric fog support

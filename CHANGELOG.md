@@ -1,5 +1,108 @@
 # Weather_Upgrade Mod - Changelog
 
+## Version 2.3.4 (Current)
+
+### Major Changes
+- **Manual Weather Control System**
+  - Complete manual control over all weather parameters during transitions
+  - 1-second reinforcement system ensures precise weather values
+  - Manual value calculation during transitions for smooth changes
+  - Aggressive 0.5-second snowfall reinforcement to combat rapid decay
+
+### Features
+- **Transition Control**
+  - Manual intermediate value calculation during preset transitions
+  - Smooth transitions with calculated progress ratios
+  - All weather parameters transitioned manually (overcast, fog, rain, snowfall, wind, volumetric fog, etc.)
+  
+- **Reinforcement System**
+  - 1-second reinforcement loop applies all weather values with optimized transitions
+  - 0.5-second aggressive snowfall reinforcement (0.0s transition) for stable snowfall
+  - TIGHT_TOLERANCE (0.005) ensures values stay within acceptable range
+  
+- **Performance**
+  - Optimized transition times (0.5s for most values, 0.0s for snowfall)
+  - Efficient 1-second update cycle
+  - Minimal CPU overhead
+
+### Technical Changes
+- Manual transition calculation replaces DayZ's automatic transitions
+- Removed reliance on DayZ's Set() API with transition time for transitions
+- Added manual intermediate value calculation in OnUpdate()
+- Comprehensive reinforcement of all weather settings every second
+- Dedicated snowfall reinforcement every 0.5 seconds
+
+### Migration Guide
+- **No action required** - fully backward compatible
+- Existing configs work without changes
+- System automatically uses manual control for all weather parameters
+
+---
+
+## Version 3.3.3 (2025-11-13)
+
+### Configuration Changes
+- **Centralized `WeatherCheckInterval` Setting**
+  - Moved `WeatherCheckInterval` from `WU_AutoWeather.json` and `WU_ManualWeather.json` to `WU_Settings.json`
+  - Single setting now controls logging/checking frequency for both Auto and Manual modes
+  - Default value changed from 60s to 30s (more responsive monitoring)
+  - Simplifies configuration - one place to control weather status logging and drift checks
+
+### Benefits
+- **Simplified Configuration:** One setting instead of two (less confusion for server owners)
+- **Consistent Behavior:** Same logging frequency regardless of weather mode
+- **Better Defaults:** 30s interval provides more responsive monitoring out of the box
+
+### Migration Guide
+- **Action Required:** 
+  - Remove `"WeatherCheckInterval"` from `WU_AutoWeather.json` (if present)
+  - Remove `"WeatherCheckInterval"` from `WU_ManualWeather.json` (if present)
+  - Add `"WeatherCheckInterval": 30` to `WU_Settings.json` (or let mod regenerate defaults)
+- **Backward Compatible:** Old configs still work (extra fields ignored), but recommended to update
+
+### Technical Changes
+- Added `WeatherCheckInterval` field to `WU_Settings` class
+- Updated `WU_ConfigManager.GetWeatherCheckInterval()` to read from Settings only
+- Removed `WeatherCheckInterval` from `WU_ConfigAuto` and `WU_ConfigManual` classes
+- Updated default config generation to exclude `WeatherCheckInterval` from auto/manual configs
+
+---
+
+## Version 3.3.2 (2025-11-12)
+
+### Bug Fixes
+- **Fixed Timer Reset Issue**
+  - Created `ReapplyCurrentWeatherValues()` method for drift correction that doesn't reset preset timer
+  - Duration countdown now works correctly (presets change after full duration expires)
+  - Previously, drift correction was resetting `m_PresetApplyTime`, preventing preset changes
+  - Random weather changes now trigger correctly after preset duration completes
+
+- **Fixed Excessive Logging**
+  - Removed rain threshold log spam from drift correction (was logging every 5 seconds)
+  - Fixed temperature override log throttling (was logging every 60ms instead of 60 seconds)
+  - Rain threshold logs now only appear during initial preset application
+  - Temperature logs now properly throttle to once per 60 seconds
+  - Significantly cleaner log output during normal operation
+
+- **Rain Sound Prevention**
+  - When rain is set to 0, rain thresholds are automatically set to 1.0-1.0 (disabled)
+  - Prevents DayZ from playing rain sounds when no visual rain is present
+  - Fixes issue where players heard rain sounds on winter maps with rain disabled
+
+### Technical Changes
+- Added `ReapplyCurrentWeatherValues()` method that reapplies weather values without resetting timer
+- Updated drift correction to use new method instead of `ApplyWeatherConfig()`
+- Fixed `GetGame().GetTime()` throttling (returns milliseconds, not seconds)
+- Rain threshold logic now checks `config.m_Rain <= 0.0` before applying thresholds
+
+### Migration Guide
+- **No action required** - fully backward compatible
+- Existing configs work without changes
+- Log improvements are automatic
+- Rain threshold fix works automatically for all presets with rain=0
+
+---
+
 ## Version 3.3.1 (2025-11-04)
 
 ### Improvements

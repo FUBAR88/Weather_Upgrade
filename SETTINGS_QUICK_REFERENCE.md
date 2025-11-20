@@ -14,9 +14,7 @@ Fast lookup table for all Weather Upgrade settings.
 | `AutoWeatherChanges` | 0/1 | 0 | **0**=Manual/Schedule, **1**=Auto/Random |
 | `EnableTemperatureControl` | 0/1 | 1 | Allow presets to override temperature |
 | `EnableZoneTemperatureControl` | 0/1 | 0 | Enable location-based temperature zones |
-| `DriftCorrectionTime` | 10-300 sec | 60 | How long drift corrections take |
-| `DriftCorrectionCooldown` | 10-120 sec | 30 | Minimum time between corrections |
-| `DriftTolerance` | 0.01-1.0 | 0.1 | Drift threshold before correction |
+| `WeatherCheckInterval` | seconds | 30 | How often to check/log weather status (both modes) |
 
 ---
 
@@ -25,7 +23,6 @@ Fast lookup table for all Weather Upgrade settings.
 | Setting | Range | Default | What It Does |
 |---------|-------|---------|--------------|
 | `DefaultWeatherPreset` | string | "clear" | Starting preset (or `""` for random) |
-| `WeatherCheckInterval` | seconds | 60 | How often to check drift/status (not weather changes) |
 | `RandomWeatherChance` | 0-100% | 30 | % chance to change when preset duration expires |
 
 **How It Works:**
@@ -40,7 +37,6 @@ Fast lookup table for all Weather Upgrade settings.
 | Setting | Type | What It Does |
 |---------|------|--------------|
 | `DefaultWeatherPreset` | string | Fallback when no schedule matches |
-| `WeatherCheckInterval` | seconds | How often to check schedule |
 | `WeatherSchedule` | array | Time-based weather entries |
 
 **Schedule Entry:**
