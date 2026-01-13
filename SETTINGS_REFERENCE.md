@@ -36,7 +36,7 @@ These are the core settings that control the overall behavior of the Weather Upg
 - **Values:**
   - `1` = Debug logging enabled (creates separate debug log file)
   - `0` = Debug logging disabled (production default)
-- **Notes:** Debug logs include drift checks, weather state details, and transition information. Only enable when troubleshooting issues.
+- **Notes:** Debug logs include weather state details, transition information, external weather change detection, and player temperature tracking. Only enable when troubleshooting issues.
 
 ### KeepLogsDays
 - **Type:** Integer
@@ -86,6 +86,29 @@ These are the core settings that control the overall behavior of the Weather Upg
   - Higher values = less frequent checks/logs (less monitoring, lower CPU usage)
   - Applies to both Auto and Manual modes (single setting for both)
 
+### DisableWeatherUpgrade
+- **Type:** Integer (0 or 1)
+- **Default:** 0
+- **Description:** Disables Weather_Upgrade weather control and allows external mods to control weather
+- **Values:**
+  - `0` = Weather control enabled (normal operation - Weather_Upgrade controls weather)
+  - `1` = Weather control disabled (monitoring mode - allows AdminTools/other mods to control weather)
+- **Use Cases:**
+  - Set to `1` if you want to use AdminTools weather commands instead of Weather_Upgrade presets
+  - Set to `1` if you have another weather mod that should take priority
+  - Set to `0` for normal Weather_Upgrade operation (recommended)
+- **Behavior When Enabled (1):**
+  - Weather_Upgrade releases MissionWeather control
+  - No weather presets are applied
+  - Mod enters "monitoring mode" - logs weather changes but doesn't enforce presets
+  - External mods (e.g., AdminTools) can now control weather freely
+  - Weather state is still logged every `WeatherCheckInterval` for monitoring
+- **Notes:** 
+  - This setting is checked on server startup and config hot-reload
+  - Changing this setting requires server restart or config reload to take effect
+  - When disabled, Weather_Upgrade will detect and log external weather changes
+  - Useful for servers that want to use AdminTools weather commands while still monitoring weather state
+
 ---
 
 ## Manual Weather Settings
@@ -95,10 +118,14 @@ These are the core settings that control the overall behavior of the Weather Upg
 Used when `AutoWeatherChanges` is set to `0`. Controls time-based weather schedules.
 
 ### DefaultWeatherPreset
-- **Type:** String
-- **Default:** "clear"
-- **Description:** Fallback preset if schedule lookup fails
-- **Notes:** Should match one of your defined preset names
+- **Type:** String (optional)
+- **Default:** Not included in Manual mode (schedule determines preset)
+- **Description:** Not used in Manual mode - schedule determines which preset to apply
+- **Notes:** 
+  - **Manual Mode:** This field is optional and not used. The schedule determines which preset to apply based on in-game time.
+  - The schedule finds the most recent entry ≤ current game time and applies that preset.
+  - If you include this field, it will be ignored - schedule always takes precedence.
+  - **Auto Mode:** This field IS used as the initial preset when server starts.
 
 ### WeatherPresets
 - **Type:** Object/Dictionary
@@ -120,8 +147,16 @@ Used when `AutoWeatherChanges` is set to `0`. Controls time-based weather schedu
 - **Fields:**
   - **Time:** Game time in 24-hour format (e.g., "14:30")
   - **Preset:** Name of preset to activate (must exist in WeatherPresets)
-  - **Chance:** Currently not used (always set to 100)
-- **Notes:** Schedule entries are sorted by time. The active preset is the most recent entry before current game time.
+  - **Chance:** Probability that this schedule entry will be applied (0-100%)
+- **How Chance Works:**
+  - When the scheduled time is reached, the system rolls a random number (1-100)
+  - If the roll is **≤ Chance**, the preset is applied
+  - If the roll is **> Chance**, the schedule entry is skipped and the previous preset continues
+- **Examples:**
+  - `"Chance": 100` = Always apply (deterministic)
+  - `"Chance": 70` = 70% chance to apply, 30% chance to skip
+  - `"Chance": 0` = Never apply (entry is effectively disabled)
+- **Notes:** Schedule entries are sorted by time. The active preset is the most recent entry before current game time that passes the chance roll.
 
 ---
 
@@ -166,21 +201,36 @@ Used when `AutoWeatherChanges` is set to `1`. Controls random weather changes.
 
 These parameters define individual weather configurations. Used in both Manual and Auto modes.
 
+**Note:** Some parameters behave differently depending on the mode:
+- **Auto Mode:** `m_MinDuration_Min/Max` controls when weather can change
+- **Manual Mode:** `m_MinDuration_Min/Max` is ignored - `WeatherSchedule` controls when weather changes
+
 ### Timing Parameters
 
 #### m_TransitionTime_Min / m_TransitionTime_Max
 - **Type:** Float (seconds)
 - **Range:** 0-3600
 - **Description:** How long the transition to this weather takes
-- **Notes:** Actual transition time is random between min and max
+- **Notes:** 
+  - Actual transition time is random between min and max
+  - **Smooth Interpolation:** Values are calculated and applied every 1 second during transitions
+  - **Progress Logging:** Transition progress is logged every 10% (0%, 10%, 20%, ..., 100%)
+  - **Both Modes:** Works identically in both Manual and Auto modes
+  - **Rain Transitions:** Rain transitions smoothly without stopping/resetting (uses wide thresholds during transitions)
+  - **Stability:** All weather parameters (overcast, fog, rain, snowfall) transition smoothly without snapping
 - **Example:** `120` to `240` = weather transitions over 2-4 minutes
 
 #### m_MinDuration_Min / m_MinDuration_Max
 - **Type:** Float (seconds)
 - **Range:** 60-7200
 - **Description:** How long the weather maintains stable values after transition
-- **Notes:** Prevents weather from changing too quickly
-- **Example:** `600` to `1200` = weather stays stable for 10-20 minutes
+- **Mode-Specific Behavior:**
+  - **Auto Mode:** Controls when weather can change - preset duration expires, then `RandomWeatherChance` is rolled
+  - **Manual Mode:** **NOT USED** - Weather changes are controlled by `WeatherSchedule` times, not duration
+- **Notes:** 
+  - In Auto mode, prevents weather from changing too quickly
+  - In Manual mode, this parameter is ignored (schedule controls timing)
+- **Example:** `600` to `1200` = weather stays stable for 10-20 minutes (Auto mode only)
 
 ### Weather Effect Parameters
 
@@ -357,6 +407,7 @@ These parameters define individual weather configurations. Used in both Manual a
   - Rain only renders when overcast reaches this threshold
   - Lower values = rain starts with lighter cloud cover
   - Visible in COT as "Rain Thresholds → Min"
+  - **During Transitions:** Automatically set to 0.0 (wide) to allow smooth rain appearance as overcast increases
 
 #### m_RainThreshold_Max
 - **Type:** Float
@@ -367,6 +418,7 @@ These parameters define individual weather configurations. Used in both Manual a
   - Typically left at 1.0
   - Defines upper bound of rain threshold
   - Visible in COT as "Rain Thresholds → Max"
+  - **During Transitions:** Automatically set to 1.0 (wide) to allow smooth rain appearance
 
 #### m_RainThreshold_Timeout
 - **Type:** Float (seconds)
@@ -375,6 +427,8 @@ These parameters define individual weather configurations. Used in both Manual a
 - **Notes:**
   - How smoothly rain starts/stops based on overcast
   - Visible in COT as "Rain Thresholds → Transition"
+  - **During Preset Transitions:** Thresholds are set wide (0.0-1.0) automatically to prevent DayZ from resetting rain
+  - Configured thresholds are applied after transition completes
 
 ### Storm Parameters
 
@@ -423,7 +477,11 @@ These parameters define individual weather configurations. Used in both Manual a
   - `-6` = Cold (good for snow)
   - `15` = Mild
   - `22` = Warm (good for storms)
-- **Notes:** Affects player temperature and survival mechanics
+- **Notes:** 
+  - Affects player temperature and survival mechanics
+  - **Fire Heat Preservation:** Fire heat (from fires, fireplaces, fire barrels) always takes priority over temperature override
+  - Players will receive heat buffs from fires even when override is set to extreme cold values (e.g., -30°C)
+  - Temperature override only applies when no fire heat is present
 
 ---
 
@@ -533,7 +591,6 @@ Creates location-based temperature zones (disabled by default).
 ## Need Help?
 
 If you have questions about specific settings or want to create custom weather configurations, refer to the other documentation files:
-- `COMPLETE_SYSTEM_v3.0.md` - System overview
-- `Weather_Upgrade_Creative_Presets.md` - Example configurations
-- `Weather_Upgrade_Volumetric_Fog_Update.md` - Advanced fog techniques
+- [Installation Guide](INSTALLATION.md) - Setup and troubleshooting
+- [Quick Settings Reference](SETTINGS_QUICK_REFERENCE.md) - Fast lookup tables
 

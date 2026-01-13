@@ -6,7 +6,7 @@ Complete installation instructions for Weather Upgrade mod.
 
 ## 📋 Requirements
 
-- **DayZ Server** version 1.25 or higher
+- **DayZ Server** version 1.28 or higher
 - **Server access** to modify start parameters and configuration files
 - **Text editor** (Notepad++, VS Code, or similar) for editing JSON files
 
@@ -17,7 +17,7 @@ Complete installation instructions for Weather Upgrade mod.
 ### Step 1: Download the Mod
 
 1. Go to [Releases](https://github.com/FUBAR88/Weather_Upgrade/releases)
-2. Download the latest `Weather_Upgrade_v2.3.4.zip`
+2. Download the latest `Weather_Upgrade_v2.3.6.zip`
 3. Extract the archive
 
 ### Step 2: Install on Server
@@ -109,14 +109,16 @@ Edit `profiles/Weather_Upgrade/WU_Settings.json`:
 
 **If Auto Mode (AutoWeatherChanges: 1):**
 1. Edit `WU_AutoWeather.json`
-2. Set `DefaultWeatherPreset` (e.g., "snowy", "clear")
+2. Set `DefaultWeatherPreset` (e.g., "snowy", "clear") - this is the initial preset when server starts
 3. Adjust `RandomWeatherChance` (0-100%)
 4. Customize presets
 
 **If Manual Mode (AutoWeatherChanges: 0):**
 1. Edit `WU_ManualWeather.json`
-2. Set up `WeatherSchedule` with times and presets
-3. Customize presets
+2. Set up `WeatherSchedule` with times, presets, and chance values
+3. Use `"Chance": 100` for deterministic schedules, or lower values (0-99) for randomness
+4. Customize presets
+5. **Note:** `DefaultWeatherPreset` is optional in Manual mode - the schedule determines which preset to apply based on in-game time
 
 ### Restart Server
 
@@ -138,13 +140,13 @@ After installation and configuration:
 
 ## 🔄 Updating
 
-### From v3.0 to v3.1
+### Updating to v2.3.6
 
 **Option 1: Auto-Upgrade (Recommended)**
 1. Delete all JSON files in `profiles/Weather_Upgrade/`
 2. Replace `@Weather_Upgrade` folder with new version
 3. Restart server
-4. New configs generate with v3.1 fields
+4. New configs generate with v2.3.6 fields
 
 **Option 2: Manual Upgrade**
 1. Replace `@Weather_Upgrade` folder with new version
@@ -218,9 +220,9 @@ After installation and configuration:
 
 ## 📞 Need Help?
 
-- [Open an Issue](https://github.com/yourusername/Weather_Upgrade/issues)
-- [Check FAQ](FAQ.md)
-- [Join Discussions](https://github.com/yourusername/Weather_Upgrade/discussions)
+- [Open an Issue](https://github.com/FUBAR88/Weather_Upgrade/issues)
+- [Check Documentation](README.md)
+- [Join Discussions](https://github.com/FUBAR88/Weather_Upgrade/discussions)
 
 ---
 

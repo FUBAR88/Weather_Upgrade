@@ -85,37 +85,44 @@ This wiki is organized into the following sections:
 
 ## 📋 Latest Version
 
-**Current:** v2.3.4
+**Current:** v2.3.6
 
-**New in v2.3.4:**
+**New in v2.3.6:**
+- ✅ **CRITICAL FIX:** Fire heat now works correctly with temperature override
+- ✅ Players can now receive heat buffs from fires even with extreme cold overrides (-30°C)
+- ✅ Temperature override now correctly applies when no fire heat is present
+- ✅ Fixed players dying of cold when temperature override was active
+
+**v2.3.5:**
+- ✅ Smooth rain transitions (rain no longer stops/resets during transitions)
+- ✅ Rain reinforcement system (every 1.0s with immediate application) prevents DayZ override
+- ✅ Rain thresholds set wide during transitions for smooth appearance
+- ✅ Fixed rain values "spinning" in admin tools (now stable like overcast/fog)
+- ✅ Smooth transitions with 1-second value updates (no snapping or glitches)
+- ✅ Enhanced transition logging (every 10% progress + debug logs every second)
+- ✅ Fixed transition values not applying in Manual mode
+- ✅ Smooth completion at 99%+ to prevent snapping
+- ✅ Removed `DefaultWeatherPreset` from Manual mode (schedule handles preset selection)
+- ✅ Fixed log spam (final values log now appears once per transition)
+
+**Previous (v2.3.4):**
 - ✅ Manual weather control with 1-second reinforcement system
-- ✅ Smooth transitions with manual value calculation
 - ✅ Aggressive 0.5-second snowfall reinforcement
-
-**v3.3.3 (2025-11-13):**
-- ✅ Centralized `WeatherCheckInterval` to `WU_Settings.json` (single setting for both modes)
-- ✅ Simplified configuration (removed duplicate setting from auto/manual configs)
-- ✅ Better default (30s instead of 60s for more responsive monitoring)
-
-**v3.3.2:**
+- ✅ Centralized `WeatherCheckInterval` to `WU_Settings.json`
 - ✅ Fixed timer reset issue (presets now change correctly after duration)
 - ✅ Fixed excessive logging spam (rain thresholds, temperature)
 - ✅ Fixed rain sounds playing when rain is disabled (winter maps)
-
-**v3.3.1:**
-- ✅ Reduced log noise (96% reduction on config hot-reloads)
+- ✅ Reduced log noise (96% reduction on hot-reloads)
 - ✅ Improved manual mode display (shows next schedule time)
-- ✅ Bug fixes and code cleanup
-
-**v3.3 Highlights:**
 - ✅ Removed drift correction (performance optimization)
 - ✅ Relies on `MissionWeather` API for stability
 - ✅ 90% reduction in weather API calls
-
-**v3.2 Highlights:**
-- ✅ Removed `WeatherChangeInterval` (eliminated confusing double-timer)
-- ✅ Each preset now controls its own duration via `m_MinDuration_Min/Max`
-- ✅ Simplified auto weather system
+- ✅ Removed `WeatherChangeInterval` (simplified auto mode)
+- ✅ Wind Function parameters (COT compatibility fix)
+- ✅ Rain Threshold controls
+- ✅ Enhanced logging (INFO + DEBUG)
+- ✅ Temperature zone system
+- ✅ DisableWeatherUpgrade setting for AdminTools compatibility
 
 [See Full Changelog](CHANGELOG.md)
 

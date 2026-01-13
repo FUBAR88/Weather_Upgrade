@@ -8,6 +8,7 @@ Fast lookup table for all Weather Upgrade settings.
 
 | Setting | Values | Default | What It Does |
 |---------|--------|---------|--------------|
+| `DisableWeatherUpgrade` | 0/1 | 0 | **0**=Normal (Weather_Upgrade controls), **1**=Disabled (allows AdminTools/other mods) |
 | `EnableLogging` | 0/1 | 1 | Create log files |
 | `EnableDebugLogging` | 0/1 | 0 | Create detailed debug logs (troubleshooting only) |
 | `KeepLogsDays` | 1-365 | 30 | Auto-delete logs older than X days |
@@ -36,7 +37,7 @@ Fast lookup table for all Weather Upgrade settings.
 
 | Setting | Type | What It Does |
 |---------|------|--------------|
-| `DefaultWeatherPreset` | string | Fallback when no schedule matches |
+| `DefaultWeatherPreset` | string (optional) | **Not used** - schedule determines preset based on in-game time |
 | `WeatherSchedule` | array | Time-based weather entries |
 
 **Schedule Entry:**
@@ -49,7 +50,10 @@ Fast lookup table for all Weather Upgrade settings.
 ```
 - `Time`: Game time (24-hour format)
 - `Preset`: Preset name to apply
-- `Chance`: 0-100% chance (allows randomness)
+- `Chance`: 0-100% probability that this entry will be applied when time is reached
+  - **100%** = Always apply (deterministic)
+  - **70%** = 70% chance to apply, 30% chance to skip (keeps previous preset)
+  - **0%** = Never apply (entry disabled)
 
 ---
 
@@ -73,7 +77,7 @@ Fast lookup table for all Weather Upgrade settings.
 | Parameter | Range | Typical | What It Does |
 |-----------|-------|---------|--------------|
 | `m_TransitionTime_Min/Max` | seconds | 120-240 | How long weather change takes (2-4 min) |
-| `m_MinDuration_Min/Max` | seconds | 600-1200 | How long weather stays stable (10-20 min) |
+| `m_MinDuration_Min/Max` | seconds | 600-1200 | **Auto mode only:** How long weather stays stable (10-20 min). **Manual mode:** Ignored (schedule controls timing) |
 
 ### Weather Effects (0.0 - 1.0)
 

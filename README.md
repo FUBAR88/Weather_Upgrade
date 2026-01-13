@@ -1,6 +1,6 @@
 # Weather Upgrade for DayZ
 
-[![Version](https://img.shields.io/badge/version-2.3.4-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
+[![Version](https://img.shields.io/badge/version-2.3.6-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
 [![DayZ](https://img.shields.io/badge/DayZ-1.25+-green.svg)](https://dayz.com)
 
 > Complete server-side weather control system for DayZ with automatic/manual scheduling and temperature zones. Performance-optimized with MissionWeather API.
@@ -43,7 +43,7 @@
 
 ### Quick Setup
 
-1. Download the mod (PBO file from mod author)
+1. Download the mod (PBO file from FUBAR)
 2. Copy `@Weather_Upgrade` folder to your server
 3. Add `-mod=@Weather_Upgrade` to server start parameters
 4. Start server - configs auto-generate in `profiles/Weather_Upgrade/`
@@ -76,7 +76,17 @@ Each preset defines its own duration. After duration expires, 30% chance to swit
     ]
 }
 ```
-Rain at 14:00 every day
+Rain at 14:00 every day (100% chance = always applies)
+
+**With Randomness:**
+```json
+{
+    "WeatherSchedule": [
+        { "Time": "14:00", "Preset": "rain", "Chance": 70 }
+    ]
+}
+```
+70% chance of rain at 14:00, 30% chance to skip (keeps previous weather)
 
 ---
 
@@ -147,9 +157,18 @@ Rain at 14:00 every day
 - All DayZ maps (Chernarus, Livonia, Namalsk, DeerIsle, custom maps)
 - COT (Community Online Tools)
 - Most gameplay mods
+- AdminTools (when `DisableWeatherUpgrade: 1` is set)
+
+⚠️ **Compatibility Mode:**
+- **AdminTools Weather Control:** Set `DisableWeatherUpgrade: 1` in `WU_Settings.json` to allow AdminTools to control weather
+  - Weather_Upgrade enters "monitoring mode" - logs weather but doesn't enforce presets
+  - AdminTools weather commands will work normally
+  - Useful for servers that prefer AdminTools weather commands
 
 ❌ **Not Compatible:**
-- Other weather control mods
+- Other weather control mods (when Weather_Upgrade is enabled)
+  - Only one weather control mod should be active at a time
+  - Use `DisableWeatherUpgrade: 1` if you need another mod to control weather
 
 ---
 
@@ -166,7 +185,10 @@ Rain at 14:00 every day
 3. Ensure `MissionWeather` is active (check startup logs)
 
 ### COT Shows Wrong Values
-Update to v3.1+ (fixes wind function and rain threshold parameters)
+Update to v2.3.6+ (fixes fire heat with temperature override)
+
+### Want to Use AdminTools Weather Instead?
+Set `DisableWeatherUpgrade: 1` in `WU_Settings.json` to allow AdminTools to control weather while Weather_Upgrade monitors and logs changes.
 
 **[Full Troubleshooting Guide](INSTALLATION.md#troubleshooting)**
 
@@ -174,44 +196,44 @@ Update to v3.1+ (fixes wind function and rain threshold parameters)
 
 ## 📝 Changelog
 
-**v2.3.4 (Current) - Latest**
+**v2.3.6 (Current) - Latest**
+- ✅ **CRITICAL FIX:** Fire heat now works correctly with temperature override
+- ✅ Players can now receive heat buffs from fires even with extreme cold overrides (-30°C)
+- ✅ Temperature override now correctly applies when no fire heat is present
+- ✅ Fixed players dying of cold when temperature override was active
+
+**v2.3.5**
+- ✅ Smooth rain transitions (rain no longer stops/resets during transitions)
+- ✅ Rain reinforcement system (every 1.0s with immediate application) prevents DayZ override
+- ✅ Rain thresholds set wide during transitions for smooth appearance
+- ✅ Fixed rain values "spinning" in admin tools (now stable like overcast/fog)
+- ✅ Smooth transitions with 1-second value updates (no snapping or glitches)
+- ✅ Enhanced transition logging (every 10% progress + debug logs every second)
+- ✅ Fixed transition values not applying in Manual mode
+- ✅ Smooth completion at 99%+ to prevent snapping
+- ✅ Removed `DefaultWeatherPreset` from Manual mode (schedule handles preset selection)
+- ✅ Fixed log spam (final values log now appears once per transition)
+
+**v2.3.4**
 - ✅ Manual weather control with 1-second reinforcement system
-- ✅ Smooth transitions with manual value calculation
 - ✅ Aggressive 0.5-second snowfall reinforcement
 - ✅ Complete server-side weather control
-
-**v3.3.3 (2025-11-13)**
 - ✅ Centralized `WeatherCheckInterval` to `WU_Settings.json` (single setting for both modes)
-- ✅ Simplified configuration (removed duplicate setting from auto/manual configs)
-- ✅ Better default (30s instead of 60s for more responsive monitoring)
-
-**v3.3.2 (2025-11-12)**
 - ✅ Fixed timer reset issue (presets now change correctly after duration)
 - ✅ Fixed excessive logging spam (rain thresholds, temperature)
 - ✅ Fixed rain sounds playing when rain is disabled (winter maps)
-
-**v3.3.1 (2025-11-04)**
 - ✅ Reduced log noise (96% reduction on hot-reloads)
 - ✅ Improved manual mode display (shows next schedule time)
-- ✅ Bug fixes and code cleanup
-
-**v3.3 (2025-11-03)**
 - ✅ Removed drift correction (performance optimization)
 - ✅ Relies on `MissionWeather` API for stability
 - ✅ 90% reduction in weather API calls
-
-**v3.2 (2025-11-02)**
 - ✅ Removed `WeatherChangeInterval` (simplified auto mode)
 - ✅ Per-preset duration control only
-
-**v3.1 (2025-11-01)**
 - ✅ Wind Function parameters (COT compatibility fix)
 - ✅ Rain Threshold controls
-
-**v3.0 (2025-10-30)**
 - ✅ Enhanced logging (INFO + DEBUG)
 - ✅ Temperature zone system
-- ✅ Manual weather control system
+- ✅ DisableWeatherUpgrade setting for AdminTools compatibility
 
 **v2.0 (2025-10-24)**
 - ✅ Volumetric fog support
@@ -239,6 +261,14 @@ Update to v3.1+ (fixes wind function and rain threshold parameters)
 ## 📜 License
 
 MIT License - See [LICENSE](LICENSE) file
+
+---
+
+## 👤 Author
+
+**FUBAR** - Weather Upgrade Mod for DayZ
+
+GitHub: [FUBAR88](https://github.com/FUBAR88)
 
 ---
 

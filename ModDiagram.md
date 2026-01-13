@@ -7,7 +7,7 @@ SERVER STARTUP
 │
 ├─► MissionServer Constructor
 │   │
-│   ├─► Initialize Logger (V2.3.4)
+│   ├─► Initialize Logger (V2.3.6)
 │   ├─► Rotate Log Files
 │   ├─► UNLOCK WEATHER FIRST (MissionWeather(false), Wide Limits)
 │   │
@@ -118,23 +118,34 @@ SERVER STARTUP
         │       │       └─► If Duration NOT Expired
         │       │           └─► Continue Current Preset
         │       │
+        │       ├─► REINFORCEMENT SYSTEM
+        │       │   │
+        │       │   ├─► Every 0.5s: Snowfall Reinforcement (0.0s transition)
+        │       │   ├─► Every 1.0s: Rain Reinforcement (0.0s transition)
+        │       │   │   ├─► During Transitions: Uses calculated transition values
+        │       │   │   └─► Not In Transition: Uses target values
+        │       │   └─► Every 30s: Limits Reassertion (Overcast/Fog/Rain/Snowfall)
+        │       │
         │       └─► TRANSITION HANDLING
         │           │
         │           ├─► If In Transition
         │           │   │
-        │           │   ├─► Calculate Transition Progress
+        │           │   ├─► Calculate Transition Progress (every 1 second)
         │           │   ├─► Interpolate Values (Old → New)
-        │           │   ├─► Apply Interpolated Values
+        │           │   ├─► Apply Interpolated Values (0.0s transition - immediate)
+        │           │   ├─► Set Wide Rain Thresholds (0.0-1.0) for smooth rain appearance
+        │           │   ├─► Log Progress Every 10% (0%, 10%, 20%, ..., 100%)
         │           │   │
-        │           │   └─► If Transition Complete
+        │           │   └─► If Transition Complete (>= 99% or elapsed >= duration)
         │           │       │
+        │           │       ├─► Apply Final Values Smoothly (0.5s transition)
         │           │       ├─► Set m_InTransition = false
-        │           │       ├─► Apply Final Values
         │           │       ├─► Set TIGHT Limits
+        │           │       ├─► Update Rain Thresholds (configured values)
         │           │       └─► Update m_PresetApplyTime
         │           │
         │           └─► If NOT In Transition
-        │               └─► Normal Operation (Weather Status Logging)
+        │               └─► Normal Operation (Weather Status Logging + Reinforcement)
         │
         └─► ZONE TEMPERATURE CONTROL (If Enabled)
             │
@@ -282,15 +293,16 @@ WU_Settings.json
 ├─► KeepLogsDays (30)
 ├─► AutoWeatherChanges (0/1)
 ├─► EnableTemperatureControl (0/1)
-└─► EnableZoneTemperatureControl (0/1)
+├─► EnableZoneTemperatureControl (0/1)
+└─► WeatherCheckInterval (30s) - Applies to both Auto and Manual modes
 
 WU_AutoWeather.json (If AutoWeatherChanges = 1)
-├─► DefaultWeatherPreset
-├─► WeatherCheckInterval (30s)
+├─► DefaultWeatherPreset (initial preset on server start)
 ├─► RandomWeatherChance (30%)
-└─► Presets[]
+└─► WeatherPresets[]
     ├─► Name
-    ├─► MinDuration
+    ├─► TransitionTime (Min/Max)
+    ├─► MinDuration (Min/Max) - Auto mode only
     ├─► Overcast (Min/Max)
     ├─► Fog (Min/Max)
     ├─► Rain (Min/Max)
@@ -298,10 +310,12 @@ WU_AutoWeather.json (If AutoWeatherChanges = 1)
     └─► Wind (Speed/Direction/Function)
 
 WU_ManualWeather.json (If AutoWeatherChanges = 0)
-├─► WeatherCheckInterval (60s)
-└─► Schedule[]
+├─► WeatherPresets[]
+│   └─► Preset configurations
+└─► WeatherSchedule[]
     ├─► Time (HH:MM)
-    └─► Preset Name
+    ├─► Preset Name
+    └─► Chance (0-100%)
 
 WU_ZoneTemperatureControl.json (If EnableZoneTemperatureControl = 1)
 ├─► ZoneCheckInterval (60s)
@@ -332,6 +346,10 @@ WEATHER STATUS MONITORING
 
 TRANSITION
 └─► Smooth interpolation between old and new preset values
+    ├─► Values calculated and applied every 1 second
+    ├─► Rain thresholds set wide (0.0-1.0) during transitions
+    ├─► Rain reinforcement uses calculated transition values
+    ├─► Progress logged every 10% (0%, 10%, 20%, ..., 100%)
     └─► Duration based on TransitionTime from config
 
 MONITORING MODE
