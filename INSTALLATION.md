@@ -17,7 +17,7 @@ Complete installation instructions for Weather Upgrade mod.
 ### Step 1: Download the Mod
 
 1. Go to [Releases](https://github.com/FUBAR88/Weather_Upgrade/releases)
-2. Download the latest `Weather_Upgrade_v2.3.6.zip`
+2. Download the latest `Weather_Upgrade_v2.3.8.zip`
 3. Extract the archive
 
 ### Step 2: Install on Server
@@ -110,15 +110,17 @@ Edit `profiles/Weather_Upgrade/WU_Settings.json`:
 **If Auto Mode (AutoWeatherChanges: 1):**
 1. Edit `WU_AutoWeather.json`
 2. Set `DefaultWeatherPreset` (e.g., "snowy", "clear") - this is the initial preset when server starts
-3. Adjust `RandomWeatherChance` (0-100%)
+3. Adjust `m_WeatherChance` values in each preset to control selection probability (higher = more likely)
 4. Customize presets
 
 **If Manual Mode (AutoWeatherChanges: 0):**
 1. Edit `WU_ManualWeather.json`
-2. Set up `WeatherSchedule` with times, presets, and chance values
-3. Use `"Chance": 100` for deterministic schedules, or lower values (0-99) for randomness
-4. Customize presets
-5. **Note:** `DefaultWeatherPreset` is optional in Manual mode - the schedule determines which preset to apply based on in-game time
+2. Define `WeatherPresets` with all presets you want to use in your schedule
+3. Set up `WeatherSchedule` with times, presets, and chance values
+4. Preset names in schedule must match preset names in `WeatherPresets`
+5. Use `"Chance": 100` for deterministic schedules, or lower values (0-99) for randomness
+6. Customize preset parameters as needed
+7. **Note:** Presets in Manual mode do NOT include `m_WeatherChance` (that's Auto mode only)
 
 ### Restart Server
 
@@ -140,26 +142,19 @@ After installation and configuration:
 
 ## 🔄 Updating
 
-### Updating to v2.3.6
+### Updating to v2.3.8
 
 **Option 1: Auto-Upgrade (Recommended)**
 1. Delete all JSON files in `profiles/Weather_Upgrade/`
 2. Replace `@Weather_Upgrade` folder with new version
 3. Restart server
-4. New configs generate with v2.3.6 fields
+4. New configs generate with v2.3.8 fields
 
 **Option 2: Manual Upgrade**
 1. Replace `@Weather_Upgrade` folder with new version
-2. Add 6 new fields to each preset in your existing JSONs:
-   ```json
-   "m_WindFunc_Min": 0.1,
-   "m_WindFunc_Max": 1.0,
-   "m_WindFunc_Speed": 20.0,
-   "m_RainThreshold_Min": 0.3,
-   "m_RainThreshold_Max": 1.0,
-   "m_RainThreshold_Timeout": 30,
-   ```
+2. No new fields required - v2.3.8 is fully backward compatible
 3. Restart server
+4. Enjoy smooth snowfall transitions!
 
 ---
 

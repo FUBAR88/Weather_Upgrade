@@ -117,24 +117,30 @@ These are the core settings that control the overall behavior of the Weather Upg
 
 Used when `AutoWeatherChanges` is set to `0`. Controls time-based weather schedules.
 
-### DefaultWeatherPreset
-- **Type:** String (optional)
-- **Default:** Not included in Manual mode (schedule determines preset)
-- **Description:** Not used in Manual mode - schedule determines which preset to apply
-- **Notes:** 
-  - **Manual Mode:** This field is optional and not used. The schedule determines which preset to apply based on in-game time.
-  - The schedule finds the most recent entry ≤ current game time and applies that preset.
-  - If you include this field, it will be ignored - schedule always takes precedence.
-  - **Auto Mode:** This field IS used as the initial preset when server starts.
+**File Structure:**
+```json
+{
+    "WeatherPresets": {
+        "preset_name": { preset parameters }
+    },
+    "WeatherSchedule": [
+        { "Time": "HH:MM", "Preset": "preset_name", "Chance": 100 }
+    ]
+}
+```
 
 ### WeatherPresets
-- **Type:** Object/Dictionary
-- **Description:** Collection of named weather configurations
+- **Type:** Object/Dictionary (required)
+- **Description:** Collection of named weather configurations used by the schedule
 - **Format:** `"preset_name": { preset parameters }`
-- **Notes:** See [Weather Preset Parameters](#weather-preset-parameters) section below
+- **Notes:** 
+  - **Required field** - must contain at least one preset
+  - Preset names must match those used in `WeatherSchedule`
+  - Presets in Manual mode do NOT include `m_WeatherChance` (that's Auto mode only)
+  - See [Weather Preset Parameters](#weather-preset-parameters) section below for parameter details
 
 ### WeatherSchedule
-- **Type:** Array of objects
+- **Type:** Array of objects (required)
 - **Description:** Time-based schedule for when presets should be active
 - **Format:**
   ```json
@@ -145,8 +151,8 @@ Used when `AutoWeatherChanges` is set to `0`. Controls time-based weather schedu
   }
   ```
 - **Fields:**
-  - **Time:** Game time in 24-hour format (e.g., "14:30")
-  - **Preset:** Name of preset to activate (must exist in WeatherPresets)
+  - **Time:** Game time in 24-hour format (e.g., "14:30", "00:00")
+  - **Preset:** Name of preset to activate (must exist in `WeatherPresets`)
   - **Chance:** Probability that this schedule entry will be applied (0-100%)
 - **How Chance Works:**
   - When the scheduled time is reached, the system rolls a random number (1-100)
@@ -156,7 +162,12 @@ Used when `AutoWeatherChanges` is set to `0`. Controls time-based weather schedu
   - `"Chance": 100` = Always apply (deterministic)
   - `"Chance": 70` = 70% chance to apply, 30% chance to skip
   - `"Chance": 0` = Never apply (entry is effectively disabled)
-- **Notes:** Schedule entries are sorted by time. The active preset is the most recent entry before current game time that passes the chance roll.
+- **Notes:** 
+  - **Required field** - must contain at least one schedule entry
+  - Schedule entries are sorted by time
+  - The active preset is the most recent entry ≤ current game time that passes the chance roll
+  - If no schedule entry matches, the first entry in the schedule is used
+  - Preset names in schedule must exactly match preset names in `WeatherPresets`
 
 ---
 
@@ -172,23 +183,27 @@ Used when `AutoWeatherChanges` is set to `1`. Controls random weather changes.
 - **Description:** Initial weather preset when server starts
 - **Notes:** Should match one of your defined preset names
 
-### RandomWeatherChance
-- **Type:** Integer (percentage)
-- **Default:** 30
-- **Description:** Probability of weather change when a preset's duration expires
-- **Recommended Values:** 0-100%
+### m_WeatherChance (in each preset)
+- **Type:** Integer (weight value)
+- **Default:** Varies by preset (clear: 25, partly_cloudy: 20, overcast: 15, etc.)
+- **Description:** Weight value used for weighted random selection when weather changes in Auto mode
 - **How It Works:**
   1. Preset is applied with a duration from `m_MinDuration_Min/Max` (e.g., 600-900 seconds)
   2. System randomly picks a duration (e.g., 750 seconds)
-  3. After 750 seconds, the system rolls the `RandomWeatherChance` dice
-  4. If roll succeeds (≤ 30%), a new random preset is selected
-  5. If roll fails (> 30%), the current preset continues
-- **Example:** With `RandomWeatherChance: 30`:
-  - `clear` preset (duration 600-900s) → rolled 750s → after 750s, 30% chance to switch to another preset
-  - If chance fails, the same `clear` preset continues with a new random duration
-- **Special Cases:**
-  - `0` = Never change automatically (stays on current preset forever)
-  - `100` = Always change when duration expires (deterministic rotation)
+  3. After duration expires, weather **always changes** to a new preset
+  4. New preset is selected using weighted random based on `m_WeatherChance` values
+  5. Higher `m_WeatherChance` = more likely to be selected
+  6. If the same preset is selected, it extends the duration and continues
+- **Example:** With presets having `m_WeatherChance` values:
+  - `clear: 25, rain: 10, snowy: 15` → Total weight = 50
+  - After duration expires, system rolls 1-50
+  - `clear` has 25/50 = 50% chance, `rain` has 10/50 = 20% chance, `snowy` has 15/50 = 30% chance
+- **Notes:**
+  - These are **relative weights**, not percentages
+  - You can use any positive numbers (e.g., 1, 10, 100, 300)
+  - All presets with `m_WeatherChance: 0` are excluded from selection
+  - If all presets have equal `m_WeatherChance`, selection is equal probability
+  - **Auto Mode Only:** This parameter is ignored in Manual mode (not used)
 
 ### WeatherPresets
 - **Type:** Object/Dictionary
@@ -202,10 +217,29 @@ Used when `AutoWeatherChanges` is set to `1`. Controls random weather changes.
 These parameters define individual weather configurations. Used in both Manual and Auto modes.
 
 **Note:** Some parameters behave differently depending on the mode:
-- **Auto Mode:** `m_MinDuration_Min/Max` controls when weather can change
-- **Manual Mode:** `m_MinDuration_Min/Max` is ignored - `WeatherSchedule` controls when weather changes
+- **Auto Mode:** `m_MinDuration_Min/Max` controls when weather can change, `m_WeatherChance` controls selection weight
+- **Manual Mode:** `m_MinDuration_Min/Max` is ignored - `WeatherSchedule` controls when weather changes, `m_WeatherChance` is ignored
 
 ### Timing Parameters
+
+#### m_WeatherChance
+- **Type:** Integer (weight value)
+- **Range:** 0 or positive integers
+- **Default:** Varies by preset
+- **Description:** Weight value for preset selection in Auto mode (ignored in Manual mode)
+- **How It Works:**
+  - When weather duration expires in Auto mode, a new preset is selected
+  - Selection uses weighted random based on `m_WeatherChance` values
+  - Higher values = more likely to be selected
+  - `0` = Preset excluded from selection
+- **Examples:**
+  - All presets `m_WeatherChance: 1` = equal probability (1/7 each)
+  - `clear: 300, rain: 200, fog: 150` = clear is most likely (300/650 = 46%)
+  - `clear: 25, rain: 10, snowy: 15` = clear is most likely (25/50 = 50%)
+- **Notes:**
+  - These are **relative weights**, not percentages
+  - You can use any positive numbers
+  - **Auto Mode Only:** This parameter is ignored in Manual mode
 
 #### m_TransitionTime_Min / m_TransitionTime_Max
 - **Type:** Float (seconds)
@@ -217,7 +251,8 @@ These parameters define individual weather configurations. Used in both Manual a
   - **Progress Logging:** Transition progress is logged every 10% (0%, 10%, 20%, ..., 100%)
   - **Both Modes:** Works identically in both Manual and Auto modes
   - **Rain Transitions:** Rain transitions smoothly without stopping/resetting (uses wide thresholds during transitions)
-  - **Stability:** All weather parameters (overcast, fog, rain, snowfall) transition smoothly without snapping
+  - **Snowfall Transitions:** Snowfall transitions smoothly without stopping/resetting (uses wide thresholds during transitions)
+  - **Stability:** All weather parameters (overcast, fog, rain, snowfall, wind, volumetric fog) transition smoothly without snapping
 - **Example:** `120` to `240` = weather transitions over 2-4 minutes
 
 #### m_MinDuration_Min / m_MinDuration_Max
@@ -225,10 +260,13 @@ These parameters define individual weather configurations. Used in both Manual a
 - **Range:** 60-7200
 - **Description:** How long the weather maintains stable values after transition
 - **Mode-Specific Behavior:**
-  - **Auto Mode:** Controls when weather can change - preset duration expires, then `RandomWeatherChance` is rolled
+  - **Auto Mode:** Controls when weather can change - preset duration expires, then a new preset is selected using weighted random based on `m_WeatherChance` values
   - **Manual Mode:** **NOT USED** - Weather changes are controlled by `WeatherSchedule` times, not duration
 - **Notes:** 
   - In Auto mode, prevents weather from changing too quickly
+  - When duration expires, weather **always changes** (no chance roll)
+  - New preset selection is weighted by `m_WeatherChance` values in each preset
+  - If the same preset is selected again, duration is extended and weather continues
   - In Manual mode, this parameter is ignored (schedule controls timing)
 - **Example:** `600` to `1200` = weather stays stable for 10-20 minutes (Auto mode only)
 
@@ -277,6 +315,8 @@ These parameters define individual weather configurations. Used in both Manual a
 - **Notes:** 
   - Requires cold temperatures to look realistic
   - Use `m_UseEnvironmentTemperature: 1` with negative temperature
+  - **Smooth Transitions:** Snowfall transitions smoothly without stopping/resetting (uses wide thresholds during transitions)
+  - **Stability:** Snowfall reinforcement every 0.5 seconds prevents DayZ override
 
 ### Wind Parameters
 
@@ -388,7 +428,11 @@ These parameters define individual weather configurations. Used in both Manual a
 - **Range:** 0.0 to 1.0
 - **Default:** 0.6 to 1.0
 - **Description:** Snowfall value required for snow effects to appear
-- **Notes:** Usually left at defaults
+- **Notes:** 
+  - Usually left at defaults
+  - **During Transitions:** Automatically set to 0.0-1.0 (wide) to allow smooth snow appearance as overcast increases
+  - Configured thresholds are applied after transition completes
+  - Thresholds disabled (1.0-1.0) when snowfall target is 0.0
 
 #### m_SnowfallThreshold_Timeout
 - **Type:** Float (seconds)
@@ -490,6 +534,33 @@ These parameters define individual weather configurations. Used in both Manual a
 **File:** `WU_ZoneTemperatureControl.json`
 
 Creates location-based temperature zones (disabled by default).
+
+**File Structure:**
+```json
+{
+    "ZoneCheckInterval": 60,
+    "Zones": [
+        {
+            "Name": "Zone Name",
+            "Position": [X, Y, Z],
+            "Radius": 1200,
+            "Height": 250,
+            "Temperature_Min": -20,
+            "Temperature_Max": -15
+        }
+    ]
+}
+```
+
+### ZoneCheckInterval
+- **Type:** Integer (seconds)
+- **Default:** 60
+- **Description:** How often the mod checks if players are inside temperature zones
+- **Recommended Values:** 30-120 seconds
+- **Notes:** 
+  - Lower values = more frequent checks (more accurate, slightly higher CPU usage)
+  - Higher values = less frequent checks (less accurate, lower CPU usage)
+  - This is separate from `WeatherCheckInterval` in main settings
 
 ### Zone Object
 

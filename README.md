@@ -1,6 +1,6 @@
 # Weather Upgrade for DayZ
 
-[![Version](https://img.shields.io/badge/version-2.3.6-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
+[![Version](https://img.shields.io/badge/version-2.3.8-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
 [![DayZ](https://img.shields.io/badge/DayZ-1.25+-green.svg)](https://dayz.com)
 
 > Complete server-side weather control system for DayZ with automatic/manual scheduling and temperature zones. Performance-optimized with MissionWeather API.
@@ -62,21 +62,23 @@
 ```json
 {
     "AutoWeatherChanges": 1,
-    "RandomWeatherChance": 30
+    "DefaultWeatherPreset": "clear"
 }
 ```
-Each preset defines its own duration. After duration expires, 30% chance to switch to a random preset.
+Each preset defines its own duration and `m_WeatherChance` weight. After duration expires, weather always changes to a new preset selected by weighted random based on `m_WeatherChance` values.
 
 **Manual Mode (Scheduled):**
 ```json
 {
-    "AutoWeatherChanges": 0,
+    "WeatherPresets": {
+        "rain": { ... preset parameters ... }
+    },
     "WeatherSchedule": [
         { "Time": "14:00", "Preset": "rain", "Chance": 100 }
     ]
 }
 ```
-Rain at 14:00 every day (100% chance = always applies)
+Rain at 14:00 every day (100% chance = always applies). Presets must be defined in `WeatherPresets`.
 
 **With Randomness:**
 ```json
@@ -111,10 +113,10 @@ Rain at 14:00 every day (100% chance = always applies)
 **WU_AutoWeather.json:**
 ```json
 {
-    "DefaultWeatherPreset": "snowy",
-    "RandomWeatherChance": 0
+    "DefaultWeatherPreset": "snowy"
 }
 ```
+Set all other presets' `m_WeatherChance` to `0` to prevent them from being selected.
 
 ### Hot Zone
 
@@ -185,7 +187,7 @@ Rain at 14:00 every day (100% chance = always applies)
 3. Ensure `MissionWeather` is active (check startup logs)
 
 ### COT Shows Wrong Values
-Update to v2.3.6+ (fixes fire heat with temperature override)
+Update to v2.3.8+ (fixes fire heat with temperature override and smooth transitions)
 
 ### Want to Use AdminTools Weather Instead?
 Set `DisableWeatherUpgrade: 1` in `WU_Settings.json` to allow AdminTools to control weather while Weather_Upgrade monitors and logs changes.
@@ -196,7 +198,15 @@ Set `DisableWeatherUpgrade: 1` in `WU_Settings.json` to allow AdminTools to cont
 
 ## 📝 Changelog
 
-**v2.3.6 (Current) - Latest**
+**v2.3.8 (Current) - Latest**
+- ✅ **MAJOR IMPROVEMENT:** Smooth snowfall transitions (snowfall no longer stops/resets during transitions)
+- ✅ Snowfall reinforcement system (every 0.5s with immediate application) prevents DayZ override
+- ✅ Snowfall thresholds set wide during transitions for smooth appearance
+- ✅ Fixed snowfall values "spinning" in admin tools (now stable like rain/overcast/fog)
+- ✅ All weather parameters now transition smoothly without snapping or glitches
+- ✅ Snowfall transitions now match rain transition behavior exactly
+
+**v2.3.6**
 - ✅ **CRITICAL FIX:** Fire heat now works correctly with temperature override
 - ✅ Players can now receive heat buffs from fires even with extreme cold overrides (-30°C)
 - ✅ Temperature override now correctly applies when no fire heat is present

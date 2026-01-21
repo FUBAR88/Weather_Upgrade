@@ -23,13 +23,15 @@ Fast lookup table for all Weather Upgrade settings.
 
 | Setting | Range | Default | What It Does |
 |---------|-------|---------|--------------|
-| `DefaultWeatherPreset` | string | "clear" | Starting preset (or `""` for random) |
-| `RandomWeatherChance` | 0-100% | 30 | % chance to change when preset duration expires |
+| `DefaultWeatherPreset` | string | "clear" | Starting preset when server starts |
 
 **How It Works:**
 - Each preset controls its own duration via `m_MinDuration_Min/Max`
-- Example: `clear` preset (600-900s) → rolled 750s → after 750s, 30% chance to switch presets
-- `0%` = Never change (stays on preset), `100%` = Always change (deterministic rotation)
+- Each preset has `m_WeatherChance` (weight value) for selection probability
+- Example: `clear` preset (600-900s) → rolled 750s → after 750s, weather **always changes**
+- New preset selected by weighted random based on `m_WeatherChance` values
+- Higher `m_WeatherChance` = more likely to be selected
+- If same preset selected again, duration extends and weather continues
 
 ---
 
@@ -37,8 +39,8 @@ Fast lookup table for all Weather Upgrade settings.
 
 | Setting | Type | What It Does |
 |---------|------|--------------|
-| `DefaultWeatherPreset` | string (optional) | **Not used** - schedule determines preset based on in-game time |
-| `WeatherSchedule` | array | Time-based weather entries |
+| `WeatherPresets` | object (required) | Collection of named weather configurations used by schedule |
+| `WeatherSchedule` | array (required) | Time-based weather entries |
 
 **Schedule Entry:**
 ```json
@@ -61,6 +63,7 @@ Fast lookup table for all Weather Upgrade settings.
 
 | Setting | Type | Example | What It Does |
 |---------|------|---------|--------------|
+| `ZoneCheckInterval` | seconds | 60 | How often to check if players are in zones |
 | `Name` | string | "Bunker" | Zone name for logs |
 | `Position` | [X,Y,Z] | [7291, 27, 2046] | Center coordinates |
 | `Radius` | meters | 1200 | Horizontal radius |
@@ -76,6 +79,7 @@ Fast lookup table for all Weather Upgrade settings.
 
 | Parameter | Range | Typical | What It Does |
 |-----------|-------|---------|--------------|
+| `m_WeatherChance` | 0+ integer | 10-25 | **Auto mode only:** Weight for preset selection (higher = more likely). **Manual mode:** Ignored |
 | `m_TransitionTime_Min/Max` | seconds | 120-240 | How long weather change takes (2-4 min) |
 | `m_MinDuration_Min/Max` | seconds | 600-1200 | **Auto mode only:** How long weather stays stable (10-20 min). **Manual mode:** Ignored (schedule controls timing) |
 

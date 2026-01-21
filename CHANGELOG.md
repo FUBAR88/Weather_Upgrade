@@ -1,6 +1,53 @@
 # Weather_Upgrade Mod - Changelog
 
-## Version 2.3.6 (Current)
+## Version 2.3.8 (Current)
+
+### Major Improvements
+- **Smooth Snowfall Transitions**
+  - Fixed snowfall stopping/resetting during transitions (now transitions smoothly like rain)
+  - Snowfall reinforcement enabled during transitions using calculated transition values
+  - Snowfall thresholds set to wide (0.0-1.0) during transitions to allow smooth appearance
+  - Snowfall reinforcement uses immediate (0.0s) transition time to prevent DayZ override
+  - Snowfall now stable and consistent like other weather parameters (rain, overcast, fog)
+  - All weather parameters now transition smoothly without snapping or glitches
+
+### Bug Fixes
+- Fixed snowfall stopping/resetting during transitions (snowfall now transitions smoothly)
+- Fixed snowfall values not being reinforced during transitions
+- Fixed snowfall thresholds preventing smooth transitions
+- Fixed abrupt snowfall changes at transition completion
+
+### Technical Changes
+- **Snowfall Reinforcement System**
+  - Aggressive snowfall reinforcement every 0.5 seconds with immediate (0.0s) transition
+  - Works during transitions (uses calculated transition values) and when not in transition (uses target values)
+  - Matches rain reinforcement behavior for maximum stability
+  - Prevents DayZ from overriding snowfall values between updates
+- **Snowfall Thresholds During Transitions**
+  - Wide thresholds (0.0-1.0) set during transitions to allow snow to appear smoothly
+  - Prevents DayZ from checking thresholds and resetting snowfall during transitions
+  - Configured thresholds applied after transition completes
+  - Thresholds disabled (1.0-1.0) when snowfall target is 0.0
+- **Transition System Parity**
+  - Snowfall transitions now match rain transition behavior exactly
+  - All weather parameters (overcast, fog, rain, snowfall, wind, volumetric fog) transition smoothly
+  - Consistent transition value calculation and application across all parameters
+
+### Performance
+- No performance impact - same 0.5-second snowfall reinforcement cycle
+- Smooth transitions prevent visual glitches and snapping
+- Snowfall reinforcement prevents DayZ override without performance cost
+
+---
+
+## Version 2.3.7
+
+### Technical Changes
+- Updated mod version to 2.3.7
+
+---
+
+## Version 2.3.6
 
 ### Critical Fixes
 - **Fire Heat Preservation**

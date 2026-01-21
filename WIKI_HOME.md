@@ -85,9 +85,17 @@ This wiki is organized into the following sections:
 
 ## 📋 Latest Version
 
-**Current:** v2.3.6
+**Current:** v2.3.8
 
-**New in v2.3.6:**
+**New in v2.3.8:**
+- ✅ **MAJOR IMPROVEMENT:** Smooth snowfall transitions (snowfall no longer stops/resets during transitions)
+- ✅ Snowfall reinforcement system (every 0.5s with immediate application) prevents DayZ override
+- ✅ Snowfall thresholds set wide during transitions for smooth appearance
+- ✅ Fixed snowfall values "spinning" in admin tools (now stable like rain/overcast/fog)
+- ✅ All weather parameters now transition smoothly without snapping or glitches
+- ✅ Snowfall transitions now match rain transition behavior exactly
+
+**v2.3.6:**
 - ✅ **CRITICAL FIX:** Fire heat now works correctly with temperature override
 - ✅ Players can now receive heat buffs from fires even with extreme cold overrides (-30°C)
 - ✅ Temperature override now correctly applies when no fire heat is present
