@@ -74,17 +74,29 @@ These are the core settings that control the overall behavior of the Weather Upg
   - `0` = Zone temperature control disabled (production default)
 - **Notes:** Allows different temperatures in specific map locations (e.g., cold mountains, warm bunkers). Requires configuration in `WU_ZoneTemperatureControl.json`
 
+### LogInterval
+- **Type:** Integer (seconds)
+- **Default:** 60
+- **Description:** How often the mod logs the full `[WEATHER STATUS]` template block
+- **Recommended Values:** 60-300 seconds
+- **Notes:**
+  - Independent from `WeatherCheckInterval` - controls only log output frequency
+  - Controls the `[WEATHER STATUS]` template block frequency in log files
+  - Lower values = more log entries (useful for debugging, more disk usage)
+  - Higher values = less noise in log files (recommended for production)
+
 ### WeatherCheckInterval
 - **Type:** Integer (seconds)
 - **Default:** 30
-- **Description:** How often the mod checks weather status and logs status updates
+- **Description:** How often the mod checks for preset duration expiry and schedule changes
 - **Recommended Values:** 30-120 seconds
 - **Notes:** 
-  - Controls template logging frequency (weather status reports)
-  - Controls schedule check frequency in manual mode
-  - Lower values = more frequent checks/logs (better monitoring, slightly higher CPU usage)
-  - Higher values = less frequent checks/logs (less monitoring, lower CPU usage)
-  - Applies to both Auto and Manual modes (single setting for both)
+  - Controls how often the mod checks if preset duration has expired (auto mode)
+  - Controls how often the mod checks if in-game time has reached a new schedule entry (manual mode)
+  - Does NOT control logging frequency (use `LogInterval` for that)
+  - Lower values = more responsive weather changes (slightly higher CPU usage)
+  - Higher values = less responsive weather changes (lower CPU usage)
+  - Applies to both Auto and Manual modes
 
 ### DisableWeatherUpgrade
 - **Type:** Integer (0 or 1)
@@ -612,7 +624,8 @@ Creates location-based temperature zones (disabled by default).
     "AutoWeatherChanges": 0,
     "EnableTemperatureControl": 1,
     "EnableZoneTemperatureControl": 0,
-    "WeatherCheckInterval": 30,
+    "LogInterval": 120,
+    "WeatherCheckInterval": 30
 }
 ```
 
@@ -622,6 +635,7 @@ Creates location-based temperature zones (disabled by default).
     "EnableLogging": 1,
     "EnableDebugLogging": 1,
     "KeepLogsDays": 7,
+    "LogInterval": 30,
     "WeatherCheckInterval": 10
 }
 ```

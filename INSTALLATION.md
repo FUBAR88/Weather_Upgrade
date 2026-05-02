@@ -6,7 +6,7 @@ Complete installation instructions for Weather Upgrade mod.
 
 ## 📋 Requirements
 
-- **DayZ Server** version 1.28 or higher
+- **DayZ Server** version 1.29 or higher
 - **Server access** to modify start parameters and configuration files
 - **Text editor** (Notepad++, VS Code, or similar) for editing JSON files
 
@@ -17,7 +17,7 @@ Complete installation instructions for Weather Upgrade mod.
 ### Step 1: Download the Mod
 
 1. Go to [Releases](https://github.com/FUBAR88/Weather_Upgrade/releases)
-2. Download the latest `Weather_Upgrade_v2.3.8.zip`
+2. Download the latest `Weather_Upgrade_v2.4.0.zip`
 3. Extract the archive
 
 ### Step 2: Install on Server
@@ -142,19 +142,19 @@ After installation and configuration:
 
 ## 🔄 Updating
 
-### Updating to v2.3.8
+### Updating to v2.4.0
 
 **Option 1: Auto-Upgrade (Recommended)**
 1. Delete all JSON files in `profiles/Weather_Upgrade/`
 2. Replace `@Weather_Upgrade` folder with new version
 3. Restart server
-4. New configs generate with v2.3.8 fields
+4. New configs generate with v2.4.0 defaults
 
 **Option 2: Manual Upgrade**
 1. Replace `@Weather_Upgrade` folder with new version
-2. No new fields required - v2.3.8 is fully backward compatible
-3. Restart server
-4. Enjoy smooth snowfall transitions!
+2. Existing configs are fully backward compatible
+3. To use schedule `Chance` in Manual mode, add `"Chance": 100` to schedule entries (defaults to always-apply if omitted)
+4. Restart server
 
 ---
 

@@ -4,7 +4,7 @@ Welcome to the **Weather Upgrade** mod documentation! This wiki contains everyth
 
 ---
 
-## 📚 Quick Navigation
+## Quick Navigation
 
 ### Getting Started
 - **[Installation Guide](INSTALLATION.md)** - How to install the mod on your server
@@ -21,13 +21,18 @@ Welcome to the **Weather Upgrade** mod documentation! This wiki contains everyth
 - **[Quick Reference Table](SETTINGS_QUICK_REFERENCE.md)** - Fast lookup for all settings
 - **[Changelog](CHANGELOG.md)** - Version history and updates
 
-### Help
-- **[Full Documentation](README.md)** - Main documentation page
-- **[Settings Reference](SETTINGS_REFERENCE.md)** - Complete settings guide
+### Technical Documentation
+- **[Weather Cycle Explanation](WEATHER_CYCLE_EXPLANATION.md)** - How auto mode works in detail
+- **[Weather Chance Explanation](WEATHER_CHANCE_EXPLANATION.md)** - How weighted selection works
+
+### Development
+- **[Known Issues](KNOWN_ISSUES.md)** - Current issues and planned fixes
+- **[System Flow](ExpectedWeatherPattens.md)** - Internal system flow documentation
+- **[Pre-Launch Checklist](Checklist.md)** - Testing procedures
 
 ---
 
-## 🎯 What is Weather Upgrade?
+## What is Weather Upgrade?
 
 Weather Upgrade is a comprehensive server-side mod that gives you complete control over DayZ weather. Unlike vanilla DayZ which uses random weather from `cfgweather.xml`, this mod lets you:
 
@@ -40,103 +45,89 @@ Weather Upgrade is a comprehensive server-side mod that gives you complete contr
 
 ---
 
-## 📖 Documentation Structure
+## Documentation Structure
 
-This wiki is organized into the following sections:
+### User Documentation
 
-### Configuration Files
+| Document | Purpose |
+|----------|---------|
+| [README.md](README.md) | Main documentation, features, quick start |
+| [INSTALLATION.md](INSTALLATION.md) | Step-by-step setup guide |
+| [SETTINGS_REFERENCE.md](SETTINGS_REFERENCE.md) | Complete settings guide |
+| [SETTINGS_QUICK_REFERENCE.md](SETTINGS_QUICK_REFERENCE.md) | Fast lookup tables |
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
 
-1. **[WU_Settings.json](SETTINGS_REFERENCE.md#master-settings)** - Master configuration
-   - Weather mode selection (Auto vs Manual)
-   - Temperature control toggles
-   - Logging configuration
+### Technical Documentation
 
-2. **[WU_AutoWeather.json](SETTINGS_REFERENCE.md#auto-weather-settings)** - Auto/Random mode
-   - Random weather change intervals
-   - Random weather chance percentage
-   - Weather presets with min/max ranges
+| Document | Purpose |
+|----------|---------|
+| [WEATHER_CYCLE_EXPLANATION.md](WEATHER_CYCLE_EXPLANATION.md) | Detailed auto mode explanation |
+| [WEATHER_CHANCE_EXPLANATION.md](WEATHER_CHANCE_EXPLANATION.md) | Weighted selection math |
 
-3. **[WU_ManualWeather.json](SETTINGS_REFERENCE.md#manual-weather-settings)** - Manual/Schedule mode
-   - Time-based weather schedule
-   - Weather presets with min/max ranges
-   - Chance-based schedule entries
+### Development Documentation
 
-4. **[WU_ZoneTemperatureControl.json](SETTINGS_REFERENCE.md#zone-temperature-settings)** - Temperature zones
-   - Location-based temperature overrides
-   - Radius and height configurations
-   - Per-zone temperature ranges
-
-### Parameter Reference
-
-- **[Complete Settings Reference](SETTINGS_REFERENCE.md)** - Every parameter explained
-- **[Quick Reference Tables](SETTINGS_QUICK_REFERENCE.md)** - Fast lookup for all settings
-- **[Changelog](CHANGELOG.md)** - Version history and release notes
+| Document | Purpose |
+|----------|---------|
+| [KNOWN_ISSUES.md](KNOWN_ISSUES.md) | Bugs, issues, and planned fixes |
+| [ExpectedWeatherPattens.md](ExpectedWeatherPattens.md) | Internal system flow |
+| [Checklist.md](Checklist.md) | Pre-launch testing checklist |
 
 ---
 
-## 🆘 Need Help?
+## Configuration Files
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `WU_Settings.json` | `profiles/Weather_Upgrade/` | Master settings |
+| `WU_AutoWeather.json` | `profiles/Weather_Upgrade/` | Auto mode presets |
+| `WU_ManualWeather.json` | `profiles/Weather_Upgrade/` | Manual mode presets + schedule |
+| `WU_ZoneTemperatureControl.json` | `profiles/Weather_Upgrade/` | Temperature zones |
+
+---
+
+## Need Help?
 
 1. **Check the [Installation Guide](INSTALLATION.md)** for setup instructions
 2. **Review the [Settings Reference](SETTINGS_REFERENCE.md)** for configuration details
 3. **Enable debug logging** in `WU_Settings.json` and check your logs
-4. **Open an issue** on GitHub with log files
+4. **Check [Known Issues](KNOWN_ISSUES.md)** for current bugs
 
 ---
 
-## 📋 Latest Version
+## Latest Version
 
-**Current:** v2.3.8
+**Current:** v2.4.1
 
-**New in v2.3.8:**
-- ✅ **MAJOR IMPROVEMENT:** Smooth snowfall transitions (snowfall no longer stops/resets during transitions)
-- ✅ Snowfall reinforcement system (every 0.5s with immediate application) prevents DayZ override
-- ✅ Snowfall thresholds set wide during transitions for smooth appearance
-- ✅ Fixed snowfall values "spinning" in admin tools (now stable like rain/overcast/fog)
-- ✅ All weather parameters now transition smoothly without snapping or glitches
-- ✅ Snowfall transitions now match rain transition behavior exactly
+**New in v2.4.1:**
+- Fixed fire heat being severely reduced when temperature override presets were active
+- Vanilla DayZ fireplace/bonfire heat now works correctly with cold weather presets
+- Removed artificial 10°C floor that was masking cold preset behavior
+- Removed "fire chills you" bug in warm presets
+
+**v2.4.0:**
+- Single-file core architecture (`WU_WeatherManager.c` + `WU_ScheduleEntry.c` in `Core/`)
+- Schedule `Chance` field now functional in Manual mode
+- Fixed RandomInt off-by-one bugs in auto weather selection
+- Fixed dead monitoring code and external weather detection
+- Player temperature zone data now stored for status logs
+- Volumetric fog now uses `m_FogTransitionTime` from config
+- Real-world server timestamps in log files (no longer in-game time)
+- Separate `LogInterval` setting for independent status log frequency control
+- Transition stability fixes (rapid-fire preset changes, log spam eliminated)
+
+**v2.3.8:**
+- Smooth snowfall transitions (snowfall no longer stops/resets)
+- Snowfall reinforcement system (every 0.5s)
+- All weather parameters now transition smoothly
 
 **v2.3.6:**
-- ✅ **CRITICAL FIX:** Fire heat now works correctly with temperature override
-- ✅ Players can now receive heat buffs from fires even with extreme cold overrides (-30°C)
-- ✅ Temperature override now correctly applies when no fire heat is present
-- ✅ Fixed players dying of cold when temperature override was active
-
-**v2.3.5:**
-- ✅ Smooth rain transitions (rain no longer stops/resets during transitions)
-- ✅ Rain reinforcement system (every 1.0s with immediate application) prevents DayZ override
-- ✅ Rain thresholds set wide during transitions for smooth appearance
-- ✅ Fixed rain values "spinning" in admin tools (now stable like overcast/fog)
-- ✅ Smooth transitions with 1-second value updates (no snapping or glitches)
-- ✅ Enhanced transition logging (every 10% progress + debug logs every second)
-- ✅ Fixed transition values not applying in Manual mode
-- ✅ Smooth completion at 99%+ to prevent snapping
-- ✅ Removed `DefaultWeatherPreset` from Manual mode (schedule handles preset selection)
-- ✅ Fixed log spam (final values log now appears once per transition)
-
-**Previous (v2.3.4):**
-- ✅ Manual weather control with 1-second reinforcement system
-- ✅ Aggressive 0.5-second snowfall reinforcement
-- ✅ Centralized `WeatherCheckInterval` to `WU_Settings.json`
-- ✅ Fixed timer reset issue (presets now change correctly after duration)
-- ✅ Fixed excessive logging spam (rain thresholds, temperature)
-- ✅ Fixed rain sounds playing when rain is disabled (winter maps)
-- ✅ Reduced log noise (96% reduction on hot-reloads)
-- ✅ Improved manual mode display (shows next schedule time)
-- ✅ Removed drift correction (performance optimization)
-- ✅ Relies on `MissionWeather` API for stability
-- ✅ 90% reduction in weather API calls
-- ✅ Removed `WeatherChangeInterval` (simplified auto mode)
-- ✅ Wind Function parameters (COT compatibility fix)
-- ✅ Rain Threshold controls
-- ✅ Enhanced logging (INFO + DEBUG)
-- ✅ Temperature zone system
-- ✅ DisableWeatherUpgrade setting for AdminTools compatibility
+- Fire heat now works correctly with temperature override
 
 [See Full Changelog](CHANGELOG.md)
 
 ---
 
-## 🔗 External Links
+## External Links
 
 - [GitHub Repository](https://github.com/FUBAR88/Weather_Upgrade)
 - [Latest Release](https://github.com/FUBAR88/Weather_Upgrade/releases)
@@ -144,5 +135,5 @@ This wiki is organized into the following sections:
 
 ---
 
-**Made with ❤️ for the DayZ Server Community**
+**Made for the DayZ Server Community**
 

@@ -15,7 +15,8 @@ Fast lookup table for all Weather Upgrade settings.
 | `AutoWeatherChanges` | 0/1 | 0 | **0**=Manual/Schedule, **1**=Auto/Random |
 | `EnableTemperatureControl` | 0/1 | 1 | Allow presets to override temperature |
 | `EnableZoneTemperatureControl` | 0/1 | 0 | Enable location-based temperature zones |
-| `WeatherCheckInterval` | seconds | 30 | How often to check/log weather status (both modes) |
+| `LogInterval` | seconds | 60 | How often to log weather status reports (separate from weather checks) |
+| `WeatherCheckInterval` | seconds | 30 | How often to check for preset duration expiry / schedule changes |
 
 ---
 

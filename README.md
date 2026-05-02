@@ -1,7 +1,7 @@
 # Weather Upgrade for DayZ
 
-[![Version](https://img.shields.io/badge/version-2.3.8-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
-[![DayZ](https://img.shields.io/badge/DayZ-1.25+-green.svg)](https://dayz.com)
+[![Version](https://img.shields.io/badge/version-2.4.1-blue.svg)](https://github.com/FUBAR88/Weather_Upgrade)
+[![DayZ](https://img.shields.io/badge/DayZ-1.29+-green.svg)](https://dayz.com)
 
 > Complete server-side weather control system for DayZ with automatic/manual scheduling and temperature zones. Performance-optimized with MissionWeather API.
 
@@ -187,7 +187,7 @@ Set all other presets' `m_WeatherChance` to `0` to prevent them from being selec
 3. Ensure `MissionWeather` is active (check startup logs)
 
 ### COT Shows Wrong Values
-Update to v2.3.8+ (fixes fire heat with temperature override and smooth transitions)
+Update to v2.4.0 (fixes fire heat with temperature override and smooth transitions)
 
 ### Want to Use AdminTools Weather Instead?
 Set `DisableWeatherUpgrade: 1` in `WU_Settings.json` to allow AdminTools to control weather while Weather_Upgrade monitors and logs changes.
@@ -198,56 +198,36 @@ Set `DisableWeatherUpgrade: 1` in `WU_Settings.json` to allow AdminTools to cont
 
 ## 📝 Changelog
 
-**v2.3.8 (Current) - Latest**
-- ✅ **MAJOR IMPROVEMENT:** Smooth snowfall transitions (snowfall no longer stops/resets during transitions)
-- ✅ Snowfall reinforcement system (every 0.5s with immediate application) prevents DayZ override
-- ✅ Snowfall thresholds set wide during transitions for smooth appearance
-- ✅ Fixed snowfall values "spinning" in admin tools (now stable like rain/overcast/fog)
-- ✅ All weather parameters now transition smoothly without snapping or glitches
-- ✅ Snowfall transitions now match rain transition behavior exactly
+**v2.4.1 (Current) - Latest**
+- Fixed fire heat being severely reduced when temperature override presets were active
+- Vanilla fireplace/bonfire heat now works correctly with cold weather presets (~50°C boost in blizzards)
+- No more "fire chills you" bug in warm presets - override is preserved when fire UTS is lower
+- Improved zone temperature debug logging clarity
+
+**v2.4.0**
+- Schedule `Chance` field now functional in Manual mode
+- Fixed RandomInt off-by-one bugs in auto weather preset selection
+- Fixed dead monitoring code and external weather change detection
+- Player temperature zone data now stored for status logs
+- Volumetric fog now uses `m_FogTransitionTime` from config
+- Fixed preset rapid-fire during transitions (`m_InTransition` guard)
+- Fixed log spam from transition progress (~22k lines/sec reduced to normal)
+- Log timestamps now use real-world server time instead of in-game time
+- New `LogInterval` setting for independent control of status log frequency
+
+**v2.3.8**
+- Smooth snowfall transitions (no longer stops/resets)
+- Snowfall reinforcement system (every 0.5s)
+- All weather parameters now transition smoothly
 
 **v2.3.6**
-- ✅ **CRITICAL FIX:** Fire heat now works correctly with temperature override
-- ✅ Players can now receive heat buffs from fires even with extreme cold overrides (-30°C)
-- ✅ Temperature override now correctly applies when no fire heat is present
-- ✅ Fixed players dying of cold when temperature override was active
+- Fire heat now works correctly with temperature override
+- Players receive heat from fires even at -30°C
 
 **v2.3.5**
-- ✅ Smooth rain transitions (rain no longer stops/resets during transitions)
-- ✅ Rain reinforcement system (every 1.0s with immediate application) prevents DayZ override
-- ✅ Rain thresholds set wide during transitions for smooth appearance
-- ✅ Fixed rain values "spinning" in admin tools (now stable like overcast/fog)
-- ✅ Smooth transitions with 1-second value updates (no snapping or glitches)
-- ✅ Enhanced transition logging (every 10% progress + debug logs every second)
-- ✅ Fixed transition values not applying in Manual mode
-- ✅ Smooth completion at 99%+ to prevent snapping
-- ✅ Removed `DefaultWeatherPreset` from Manual mode (schedule handles preset selection)
-- ✅ Fixed log spam (final values log now appears once per transition)
-
-**v2.3.4**
-- ✅ Manual weather control with 1-second reinforcement system
-- ✅ Aggressive 0.5-second snowfall reinforcement
-- ✅ Complete server-side weather control
-- ✅ Centralized `WeatherCheckInterval` to `WU_Settings.json` (single setting for both modes)
-- ✅ Fixed timer reset issue (presets now change correctly after duration)
-- ✅ Fixed excessive logging spam (rain thresholds, temperature)
-- ✅ Fixed rain sounds playing when rain is disabled (winter maps)
-- ✅ Reduced log noise (96% reduction on hot-reloads)
-- ✅ Improved manual mode display (shows next schedule time)
-- ✅ Removed drift correction (performance optimization)
-- ✅ Relies on `MissionWeather` API for stability
-- ✅ 90% reduction in weather API calls
-- ✅ Removed `WeatherChangeInterval` (simplified auto mode)
-- ✅ Per-preset duration control only
-- ✅ Wind Function parameters (COT compatibility fix)
-- ✅ Rain Threshold controls
-- ✅ Enhanced logging (INFO + DEBUG)
-- ✅ Temperature zone system
-- ✅ DisableWeatherUpgrade setting for AdminTools compatibility
-
-**v2.0 (2025-10-24)**
-- ✅ Volumetric fog support
-- ✅ Snowflake scale control
+- Smooth rain transitions
+- Rain reinforcement system (every 1.0s)
+- Fixed transition values in Manual mode
 
 **[Full Changelog](CHANGELOG.md)**
 
@@ -282,5 +262,5 @@ GitHub: [FUBAR88](https://github.com/FUBAR88)
 
 ---
 
-**Compatible with DayZ 1.25+**  
+**Compatible with DayZ 1.29+**  
 **Made for DayZ Server Owners**
